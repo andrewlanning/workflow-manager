@@ -1,4 +1,4 @@
-package Code.Wranglers.Workflow.Manager;
+package com.codewranglers.workflowmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

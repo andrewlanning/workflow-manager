@@ -1,4 +1,4 @@
-package Code.Wranglers.Workflow.Manager.models;
+package com.codewranglers.workflowmanager.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

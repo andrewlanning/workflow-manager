@@ -1,4 +1,4 @@
-package Code.Wranglers.Workflow.Manager;
+package com.codewranglers.workflowmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
