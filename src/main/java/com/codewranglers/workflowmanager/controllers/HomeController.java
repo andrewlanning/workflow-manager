@@ -10,19 +10,19 @@ public class HomeController {
     @GetMapping("admin")
     @ResponseBody
     public String admin(){
-        return "This is the Admin Portal";
+        return "admin/index";
     }
 
     @GetMapping("manager")
     @ResponseBody
     public String manager(){
-        return "This is the manager Portal";
+        return "manager/index";
     }
 
     @GetMapping("member")
     @ResponseBody
     public String member(){
-        return "This is the Quality/Assembly Portal";
+        return "member/index";
     }
 }
 
