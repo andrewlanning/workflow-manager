@@ -2,63 +2,52 @@ package com.codewranglers.workflowmanager.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private String username;
-    private String password;
+
+    @NotNull
+    private String pwHash;
+
     private String firstname;
     private String lastname;
     private String email;
     private String role;
 
-    private String recoveryQuestion1;
-    private String recoveryQuestion2;
-    private String recoveryAnswer1;
-    private String recoveryAnswer2;
+    public User() {}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
-                ", recoveryQuestion1='" + recoveryQuestion1 + '\'' +
-                ", recoveryQuestion2='" + recoveryQuestion2 + '\'' +
-                ", recoveryAnswer1='" + recoveryAnswer1 + '\'' +
-                ", recoveryAnswer2='" + recoveryAnswer2 + '\'' +
-                '}';
+    public User(String username, String password, String firstname, String lastname, String email, String role) {
+        this.username = username;
+        this.pwHash = encoder.encode(password);
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.role = role;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
     }
 
     public String getFirstname() {
@@ -93,35 +82,5 @@ public class User {
         this.role = role;
     }
 
-    public String getRecoveryQuestion1() {
-        return recoveryQuestion1;
-    }
 
-    public void setRecoveryQuestion1(String recoveryQuestion1) {
-        this.recoveryQuestion1 = recoveryQuestion1;
-    }
-
-    public String getRecoveryQuestion2() {
-        return recoveryQuestion2;
-    }
-
-    public void setRecoveryQuestion2(String recoveryQuestion2) {
-        this.recoveryQuestion2 = recoveryQuestion2;
-    }
-
-    public String getRecoveryAnswer1() {
-        return recoveryAnswer1;
-    }
-
-    public void setRecoveryAnswer1(String recoveryAnswer1) {
-        this.recoveryAnswer1 = recoveryAnswer1;
-    }
-
-    public String getRecoveryAnswer2() {
-        return recoveryAnswer2;
-    }
-
-    public void setRecoveryAnswer2(String recoveryAnswer2) {
-        this.recoveryAnswer2 = recoveryAnswer2;
-    }
 }

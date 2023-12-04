@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
 </head>
 <body>
 
-    <p>Login Placeholder</p>
+    <main>
+        <h1> Log In</h1>
+
+        <form method="post">
+            <div>
+                <label th:for="username">Username</label>
+                <input th:field="${loginFormDTO.username}" />
+                <p class="error" th:errors="${loginFormDTO.username}"></p>
+            </div>
+            <div>
+                <label th:for="password">Password</label>
+                <input th:field="${loginFormDTO.password}" />
+                <p class="error" th:errors="${loginFormDTO.password}"></p>
+            </div>
+
+            <button type="submit">Log In</button>
+        </form>
+    </main>
 
 </body>
 </html>
