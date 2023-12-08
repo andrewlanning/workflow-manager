@@ -1,40 +1,42 @@
 package com.codewranglers.workflowmanager.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+/*
+ * This class provides the model for each User.
+ * It is intended to be simplistic by nature for the sake of the project.
+ *
+ * Limitiations?
+ * No recovery information...
+ *
+ * Created by Andrew Lanning 12-06-23
+ */
 
 @Entity
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private String password;
+    private String username; // Combo of lastname first initial (ie: lanninga)
+    private String password; // Encoded w/ Bcrypt SHA256
     private String firstname;
     private String lastname;
-    private String email;
-    private String role;
+    private String email; // Automatically generated using username + desired domain
+    private Integer role; // 1:Product Manager, 2: Member, 3: Admin
 
-    private String recoveryQuestion1;
-    private String recoveryQuestion2;
-    private String recoveryAnswer1;
-    private String recoveryAnswer2;
+    public User() {
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
-                ", recoveryQuestion1='" + recoveryQuestion1 + '\'' +
-                ", recoveryQuestion2='" + recoveryQuestion2 + '\'' +
-                ", recoveryAnswer1='" + recoveryAnswer1 + '\'' +
-                ", recoveryAnswer2='" + recoveryAnswer2 + '\'' +
-                '}';
+    }
+
+    public User(String password, String firstname, String lastname) {
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.role = role;
     }
 
     public Long getId() {
@@ -85,43 +87,11 @@ public class User {
         this.email = email;
     }
 
-    public String getRole() {
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Integer role) {
         this.role = role;
-    }
-
-    public String getRecoveryQuestion1() {
-        return recoveryQuestion1;
-    }
-
-    public void setRecoveryQuestion1(String recoveryQuestion1) {
-        this.recoveryQuestion1 = recoveryQuestion1;
-    }
-
-    public String getRecoveryQuestion2() {
-        return recoveryQuestion2;
-    }
-
-    public void setRecoveryQuestion2(String recoveryQuestion2) {
-        this.recoveryQuestion2 = recoveryQuestion2;
-    }
-
-    public String getRecoveryAnswer1() {
-        return recoveryAnswer1;
-    }
-
-    public void setRecoveryAnswer1(String recoveryAnswer1) {
-        this.recoveryAnswer1 = recoveryAnswer1;
-    }
-
-    public String getRecoveryAnswer2() {
-        return recoveryAnswer2;
-    }
-
-    public void setRecoveryAnswer2(String recoveryAnswer2) {
-        this.recoveryAnswer2 = recoveryAnswer2;
     }
 }

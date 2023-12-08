@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Creation Portal</title>
+</head>
+<body>
+<h1>User Creation Portal</h1>
+<form th:action="@{/admin/user_management/create_user}" method="post" th:object="${user}">
+    <p>First Name</p>
+    <input type="text" th:field="*{firstname}" />
+    <p>Last Name</p>
+    <input type="text" th:field="*{lastname}" />
+    <p>Password</p>
+    <input type="password" th:field="*{password}" />
+    <p>Role Type</p>
+    <input type="number" th:field="*{role}" />
+    <button type="submit">Create User</button>
+</form>
+</body>
+</html>
