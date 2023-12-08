@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
 </head>
 <body>
+<div th:replace="fragments :: page-header"></div>
 <section id="page" class="container">
-    <div th:replace="fragments :: page-header"></div>
     <h1>User Management Portal</h1>
     <table>
         <thead>
@@ -19,7 +19,6 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Loop through each item in the 'items' list -->
         <tr th:each="user : ${users}">
             <td th:text="${user.id}"></td>
             <td th:text="${user.username}"></td>
