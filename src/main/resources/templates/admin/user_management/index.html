@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF=8"/>
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+</head>
+<body>
+<section id="page" class="container">
+    <div th:replace="fragments :: page-header"></div>
+    <h1>User Management Portal</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through each item in the 'items' list -->
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${user.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href='/admin/user_management/create_user'>Create New User</a>
+</section>
+
+
+</body>
+</html>
