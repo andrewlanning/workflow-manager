@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -17,7 +20,22 @@ public class AdminController {
     private UserRepository userRepository;
 
     @GetMapping("")
-    public String renderAdminPortal(){
+    public String renderAdminPortal(Model model){
+        List<String> pages = new ArrayList<>();
+        pages.add("User Management");
+        pages.add("Role Management");
+        pages.add("Workflow Management");
+        List<String> user = new ArrayList<>();
+        user.add("Manufacturing Operator");
+        user.add("Product Manager");
+        user.add("Administrator");
+        List<String> urlStrings = new ArrayList<>();
+        urlStrings.add("usermanagement");
+        urlStrings.add("rolemanagement");
+        urlStrings.add("workflowmanagement");
+        model.addAttribute("pages",pages);
+        model.addAttribute("user", user);
+        model.addAttribute("url", urlStrings);
         return "/admin/index";
     }
 
