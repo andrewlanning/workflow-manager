@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -40,7 +41,9 @@ public class AdminController {
     }
 
     @GetMapping("/user_management")
-    public String renderUserManagementPortal() {
+    public String renderUserManagementPortal(Model model) {
+        Iterable<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
         return "admin/user_management/index";
     }
 

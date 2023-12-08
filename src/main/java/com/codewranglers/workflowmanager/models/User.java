@@ -29,7 +29,6 @@ public class User {
     private Integer role; // 1:Product Manager, 2: Member, 3: Admin
 
     public User() {
-
     }
 
     public User(String password, String firstname, String lastname) {
