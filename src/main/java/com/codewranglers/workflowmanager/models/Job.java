@@ -17,7 +17,6 @@ import java.util.List;
  * Created by Andrew Lanning 12-06-23
  */
 
-
 @Entity
 public class Job {
 
