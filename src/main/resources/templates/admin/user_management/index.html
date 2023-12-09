@@ -1,11 +1,35 @@
-<html lang=\"en\">
-    <head>
-        <meta charset=\"UTF-8\">
-        <title>User Management Portal</title>
-    </head>
-    <body>
-        <h1>User Management Portal</h1>
-        <p>Database View Goes Here</p>
-        <a href='/admin/user_management/create_user'>Create New User</a>
-    </body>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF=8"/>
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+</head>
+<body>
+<div th:replace="fragments :: page-header"></div>
+<section id="page" class="container">
+    <h1>User Management Portal</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${user.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href='/admin/user_management/create_user'>Create New User</a>
+</section>
+
+
+</body>
 </html>
