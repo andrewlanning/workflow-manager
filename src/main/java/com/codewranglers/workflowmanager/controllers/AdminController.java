@@ -68,8 +68,6 @@ public class AdminController {
         user.setPassword(encodedPassword);
         user.setUsername(username);
         user.setEmail(email);
-
-
         userRepository.save(user);
         return "redirect:/admin/user_management";
     }

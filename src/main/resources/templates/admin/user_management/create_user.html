@@ -3,19 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>User Creation Portal</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
 </head>
 <body>
-<h1>User Creation Portal</h1>
-<form th:action="@{/admin/user_management/create_user}" method="post" th:object="${user}">
-    <p>First Name</p>
-    <input type="text" th:field="*{firstname}" />
-    <p>Last Name</p>
-    <input type="text" th:field="*{lastname}" />
-    <p>Password</p>
-    <input type="password" th:field="*{password}" />
-    <p>Role Type</p>
-    <input type="number" th:field="*{role}" />
-    <button type="submit">Create User</button>
-</form>
+
+<div th:replace="~{fragments :: page-header}"></div>
+<div class="container">
+    <h1>User Creation Portal</h1>
+    <form th:action="@{/admin/user_management/create_user}" method="post" th:object="${user}">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="basic-addon1" th:field="*{firstname}">
+        </div>
+<!--        <p>First Name</p>-->
+<!--        <input type="text" th:field="*{firstname}" />-->
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{lastname}">
+        </div>
+<!--        <p>Last Name</p>-->
+<!--        <input type="text" th:field="*{lastname}" />-->
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Password" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{password}">
+        </div>
+<!--        <p>Password</p>-->
+<!--        <input type="password" th:field="*{password}" />-->
+
+
+
+
+<!--        <p>Role Type</p>-->
+<!--        <input type="number" th:field="*{role}" />-->
+
+        <div class="form-group">
+            <label for="role">Select Role</label>
+            <select class="form-select" th:field="*{role}" id="role">
+                <option value="1">Product Manager</option>
+                <option value="2">Member</option>
+                <option value="3">Administrator</option>
+            </select>
+        </div>
+
+        <button style="display: block; margin-top: 1rem;" type="submit">Create User</button>
+    </form>
+</div>
+
 </body>
 </html>
