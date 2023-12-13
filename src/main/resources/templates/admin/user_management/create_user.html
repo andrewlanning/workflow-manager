@@ -10,7 +10,7 @@
 <div th:replace="~{fragments :: page-header}"></div>
 <div class="container">
     <h1>User Creation Portal</h1>
-    <form th:action="@{/admin/user_management/create_user}" method="post" th:object="${user}">
+    <form th:action="@{/users/add}" method="post" th:object="${user}">
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="basic-addon1" th:field="*{firstname}">
         </div>
