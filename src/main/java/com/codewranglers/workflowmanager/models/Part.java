@@ -7,7 +7,7 @@ public class Part {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int partId;
+    private Integer partId;
 
     private String serNum;
 
@@ -55,5 +55,13 @@ public class Part {
 
     public void setLot(Lot lot) {
         this.lot = lot;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
     }
 }

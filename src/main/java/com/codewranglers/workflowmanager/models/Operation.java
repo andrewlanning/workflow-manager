@@ -20,7 +20,7 @@ public class Operation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int operationId;
+    private Integer operationId;
 
     private String opName;
     private int opNumber;

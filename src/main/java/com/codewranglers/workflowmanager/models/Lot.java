@@ -9,7 +9,7 @@ public class Lot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int lotId;
+    private Integer lotId;
 
     private String lotNumber; // Automatically Generated
 
