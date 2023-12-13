@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
-    <meta charset="UTF=8"/>
+    <meta charset="UTF-8"/>
     <title></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
 </head>
@@ -13,7 +13,8 @@
         <thead>
         <tr>
             <th>UserId</th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Role</th>
             <th>Email</th>
         </tr>
@@ -21,15 +22,14 @@
         <tbody>
         <tr th:each="user : ${users}">
             <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
+            <td th:text="${user.firstname}"></td>
+            <td th:text="${user.lastname}"></td>
             <td th:text="${user.role}"></td>
             <td th:text="${user.email}"></td>
         </tr>
         </tbody>
     </table>
-    <a href='@{/admin/user_management/create_user}'>Create New User</a>
+    <a th:href="@{/admin/user_management/create_user}">Create New User</a>
 </section>
-
-
 </body>
 </html>
