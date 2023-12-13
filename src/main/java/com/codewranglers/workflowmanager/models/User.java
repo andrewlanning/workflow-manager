@@ -32,7 +32,7 @@ public class User {
 
     public User() {
     }
-
+git
     public User(String password, String firstname, String lastname) {
         this.password = password;
         this.firstname = firstname;
@@ -40,7 +40,7 @@ public class User {
         this.role = role;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
