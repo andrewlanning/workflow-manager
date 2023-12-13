@@ -15,6 +15,8 @@ public class ManagerController {
 
     @GetMapping("/create_product")
     public String renderProductCreationPortal(){
+
+
         return "/manager/create_product";
     }
 
