@@ -22,7 +22,7 @@ public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int jobId;
+    private Integer jobId;
 
     private String workOrderNumber; // ie: WO1234
 

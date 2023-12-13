@@ -15,12 +15,14 @@ import jakarta.persistence.Id;
  * Created by Andrew Lanning 12-06-23
  */
 
+// TODO: Review security stuff with Luke Sperkowski
+
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String username; // Combo of lastname first initial (ie: lanninga)
     private String password; // Encoded w/ Bcrypt SHA256
     private String firstname;
@@ -40,10 +42,6 @@ public class User {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {

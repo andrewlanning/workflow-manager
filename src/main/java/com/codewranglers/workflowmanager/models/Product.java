@@ -32,7 +32,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productId;
+    private Integer productId;
 
     private String productName; // Unique name associated to the product (ie: 'Jefferson Grandfather Clock')
     private String productDescription;
