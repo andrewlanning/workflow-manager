@@ -34,8 +34,9 @@ public class User {
     public User() {
     }
 
-    public User(String password, String firstname, String lastname) {
-        this.password = password;
+    public User(String username, String password, String firstname, String lastname, String role) {
+        this.username = username;
+        this.pwHash = encoder.encode(password);
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
