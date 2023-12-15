@@ -25,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String username; // Combo of lastname first initial (ie: lanninga)
-    private String password; // Encoded w/ Bcrypt SHA256
+    private String pwHash; // Encoded w/ Bcrypt SHA256
     private String firstname;
     private String lastname;
     private String email; // Automatically generated using username + desired domain
@@ -34,7 +34,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String firstname, String lastname, String role) {
+    public User(String username, String password, String firstname, String lastname, Integer role) {
         this.username = username;
         this.pwHash = encoder.encode(password);
         this.firstname = firstname;
@@ -48,7 +48,7 @@ public class User {
         return encoder.matches(password, pwHash);
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -58,14 +58,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstname() {
