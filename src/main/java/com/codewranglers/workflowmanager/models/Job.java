@@ -17,13 +17,12 @@ import java.util.List;
  * Created by Andrew Lanning 12-06-23
  */
 
-
 @Entity
 public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int jobId;
+    private Integer jobId;
 
     private String workOrderNumber; // ie: WO1234
 
