@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /*
  * This class provides the model for each User.
@@ -38,6 +39,12 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
+    }
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
     }
 
     public Long getId() {
