@@ -10,7 +10,7 @@
 <div th:replace="~{fragments :: page-header}"></div>
 <div class="container">
     <h1>User Creation Portal</h1>
-    <form th:action="@{/admin/user_management/create_user}" method="post" th:object="${user}">
+    <form th:action="@{/users/add}" method="post" th:object="${user}">
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="basic-addon1" th:field="*{firstname}">
         </div>
@@ -22,13 +22,20 @@
 <!--        <p>Last Name</p>-->
 <!--        <input type="text" th:field="*{lastname}" />-->
         <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" th:field="*{username}">
+        </div>
+        <!--        <p>Username</p>-->
+        <!--        <input type="text" th:field="*{username}" />-->
+        <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Password" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{password}">
         </div>
 <!--        <p>Password</p>-->
 <!--        <input type="password" th:field="*{password}" />-->
-
-
-
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" th:field="*{email}">
+        </div>
+        <!--        <p>Email</p>-->
+        <!--        <input type="text" th:field="*{email}" />-->
 
 <!--        <p>Role Type</p>-->
 <!--        <input type="number" th:field="*{role}" />-->

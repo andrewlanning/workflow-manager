@@ -53,6 +53,7 @@ public class Job {
         this.startDate = startDate;
         this.dueDate = dueDate;
     }
+    public Job() {}
 
     public int getJobId() {
         return jobId;
