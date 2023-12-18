@@ -22,7 +22,7 @@ public class UserController {
     public String index(Model model) {
         model.addAttribute("title", "All Users");
         model.addAttribute("users", userRepository.findAll());
-        return "users/index";
+        return "/admin/user_management/index";
     }
 
     @GetMapping("add")
@@ -59,11 +59,12 @@ public class UserController {
             User user = optUser.get();
             model.addAttribute("title", "Edit User");
             model.addAttribute("user", user);
-            return "users/edit";
+            return "admin/user_management/edit";
         } else {
-            return "redirect:/users";
+            return "redirect:admin/user_management/edit";
         }
     }
+    @PostMapping("edit/{userId}")
     public String processEditUserForm(@PathVariable int userId,
                                      @ModelAttribute @Valid User editedUser,
                                      Errors errors, Model model) {
@@ -77,6 +78,9 @@ public class UserController {
         if (optUser.isPresent()) {
             User user = optUser.get();
             user.setUsername(editedUser.getUsername());
+            user.setFirstname(editedUser.getFirstname());
+            user.setLastname(editedUser.getLastname());
+            user.setRole(editedUser.getRole());
             user.setEmail(editedUser.getEmail());
             userRepository.save(user);
         }
