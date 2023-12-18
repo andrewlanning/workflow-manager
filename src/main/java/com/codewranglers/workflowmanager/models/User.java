@@ -27,7 +27,7 @@ public class User {
     private Integer id;
     private String username; // Combo of lastname first initial (ie: lanninga)
     @NotNull
-    private String pwHash; // Encoded w/ Bcrypt SHA256
+    private String pwhash; // Encoded w/ Bcrypt SHA256
     private String firstname;
     private String lastname;
     private String email; // Automatically generated using username + desired domain
@@ -37,7 +37,7 @@ public class User {
     }
 
     public User(String password, String firstname, String lastname, Integer role) {
-        this.pwHash = encoder.encode(password);
+        this.pwhash = encoder.encode(password);
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
@@ -46,7 +46,7 @@ public class User {
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public boolean isMatchingPassword(String password) {
-        return encoder.matches(password, pwHash);
+        return encoder.matches(password, pwhash);
     }
 
     public Integer getId() {
