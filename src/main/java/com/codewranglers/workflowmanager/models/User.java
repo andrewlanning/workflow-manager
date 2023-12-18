@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /*
@@ -25,6 +26,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String username; // Combo of lastname first initial (ie: lanninga)
+    @NotNull
     private String pwHash; // Encoded w/ Bcrypt SHA256
     private String firstname;
     private String lastname;
@@ -34,8 +36,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String firstname, String lastname, Integer role) {
-        this.username = username;
+    public User(String password, String firstname, String lastname, Integer role) {
         this.pwHash = encoder.encode(password);
         this.firstname = firstname;
         this.lastname = lastname;
