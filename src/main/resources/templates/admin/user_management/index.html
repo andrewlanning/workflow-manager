@@ -3,38 +3,44 @@
 <head>
     <meta charset="UTF-8"/>
     <title></title>
+    <link rel="stylesheet" th:href="@{/global-styles.css}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
 </head>
 <body>
 <div th:replace="fragments :: page-header"></div>
 <section id="page" class="container">
     <h1>User Management Portal</h1>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>UserId</th>
-            <th>Username</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Role</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.firstname}"></td>
-            <td th:text="${user.lastname}"></td>
-            <td th:text="${user.role}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <a th:href="@{/users/edit/{userId}(userId=${user.id})}" class="btn btn-primary">Edit</a>
-                <a th:href="@{/users/delete/{userId}(userId=${user.id})}" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive-sm">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>UserId</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.firstname}"></td>
+                <td th:text="${user.lastname}"></td>
+                <td th:text="${user.role}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                    <a th:href="@{/users/edit/{userId}(userId=${user.id})}" class="btn btn-primary">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/users/delete/{userId}(userId=${user.id})}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <a th:href="@{/admin/user_management/create_user}" class="btn btn-primary">Create New User</a>
 </section>
 </body>
