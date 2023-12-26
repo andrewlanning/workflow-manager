@@ -27,3 +27,8 @@
  margin-bottom:1rem;
  border-radius:0.5rem;
  }
+
+ .dark-mode-form {
+     background-color: #343a40; /* Dark background */
+     color: white; /* Light text */
+ }
