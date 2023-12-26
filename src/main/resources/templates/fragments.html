@@ -8,43 +8,8 @@
 </head>
 
 <body>
-
-<!--<div th:fragment="page-header" class="navbar navbar-inverse navbar-fixed-top">-->
-<!--    <div class="container">-->
-<!--        <div class="navbar-header">-->
-<!--            -->
-<!--        </div>-->
-<!--        <div class="navbar-collapse collapse">-->
-<!--            <ul class="nav navbar-nav">-->
-<!--                <li><a th:href="@{/list}">List</a></li>-->
-<!--                <li><a th:href="@{/search}">Search</a></li>-->
-<!--                <li><a th:href="@{/add}">Add Jobs</a></li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-<!--<div th:fragment="page-header">-->
-<!--    <nav class="navbar-dark bg-dark text-white">-->
-<!--        <div class="container">-->
-<!--            <ul class="navbar-nav" style="display: flex; align-items: center;">-->
-<!--                <li class="nav-item active">-->
-<!--                    <button type="button" onclick="history.back();" style="background-color: transparent; border: none;">-->
-<!--                        <a href="#">Back</a>-->
-<!--                    </button>-->
-<!--                </li>-->
-<!--                <li class="nav-item active">-->
-<!--                    <a href="/">Log Out</a>-->
-<!--                </li>-->
-<!--            </ul>-->
-
-<!--        </div>-->
-<!--    </nav>-->
-<!--</div>-->
-
 <section th:fragment="page-header" class="bg-dark text-white">
-    <header class="container-md header-section" style="padding-top:0.5rem;">
+    <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
         <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
             <li class="list-item">
                 <a onclick="history.back()" href="#">Back</a>
@@ -55,6 +20,5 @@
         </ul>
     </header>
 </section>
-
 </body>
 </html>
