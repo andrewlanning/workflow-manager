@@ -28,7 +28,7 @@
                 <a th:href="@{/manager/product/edit/{productId}(productId=${product.productId})}">Edit</a>
             </td>
             <td>
-                <a th:href="@{/manager/product/delete/{productId}(productId=${product.productId})}">Delete</a>
+                <a th:href="@{/manager/product/delete/{productId}(productId=${product.productId})}" onclick="return confirm('Are you sure you want to Delete this Product?')">Delete</a>
             </td>
         </tr>
         </tbody>
