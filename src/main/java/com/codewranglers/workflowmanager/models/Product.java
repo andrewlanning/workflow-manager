@@ -1,6 +1,8 @@
 package com.codewranglers.workflowmanager.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -28,13 +30,20 @@ import java.util.List;
  */
 
 @Entity
+@Table(name = "product")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Integer productId;
-
+    @NotBlank(message = "Product name is required")
+    @Size(max = 255, message = "Product name must be less than 255 characters")
+    @Column(name = "product_name")
     private String productName; // Unique name associated to the product (ie: 'Jefferson Grandfather Clock')
+    @NotBlank(message = "Product Description is required")
+    @Size(max = 500, message = "Product Description must be less than 500 characters")
+    @Column(name = "product_description")
     private String productDescription;
 
     @OneToMany(mappedBy="product")
@@ -46,10 +55,14 @@ public class Product {
     @OneToMany(mappedBy="product")
     private List<Part> partsList; // All parts that are assigned to this product
 
-    // User is only prompted for Name and Description, all other fields are set when the Job is created.
+//     User is only prompted for Name and Description, all other fields are set when the Job is created.
     public Product(String productName, String productDescription) {
         this.productName = productName;
         this.productDescription = productDescription;
+    }
+
+    public Product() {
+
     }
 
     public int getProductId() {
