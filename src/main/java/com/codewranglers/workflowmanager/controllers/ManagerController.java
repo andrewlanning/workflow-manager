@@ -1,14 +1,18 @@
 package com.codewranglers.workflowmanager.controllers;
 
 import com.codewranglers.workflowmanager.models.Product;
+import com.codewranglers.workflowmanager.models.User;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/manager")
@@ -55,6 +59,38 @@ public class ManagerController {
     @PostMapping("/product/add")
     public String processProductCreation(@ModelAttribute("product") Product product) {
         productRepository.save(product);
+        return "redirect:/manager/product";
+    }
+
+    @GetMapping("/product/edit/{productId}")
+    public String displayEditProductForm(Model model, @PathVariable int productId) {
+        Optional<Product> productById = productRepository.findById(productId);
+        if (productById.isPresent()) {
+            Product product = productById.get();
+            model.addAttribute("title", "Edit Product");
+            model.addAttribute("product", product);
+            return "manager/product/edit";
+        } else {
+            return "redirect:manager/product/edit";
+        }
+    }
+    @PostMapping("/product/edit/{productId}")
+    public String processEditUserForm(@PathVariable int productId,
+                                      @ModelAttribute @Valid Product editedProduct,
+                                      Errors errors, Model model) {
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Edit Product");
+            return "manager/product/edit";
+        }
+
+        Optional<Product> productById = productRepository.findById(productId);
+        if (productById.isPresent()) {
+            Product product = productById.get();
+            product.setProductName(editedProduct.getProductName());
+            product.setProductDescription(editedProduct.getProductDescription());
+            productRepository.save(product);
+        }
         return "redirect:/manager/product";
     }
 

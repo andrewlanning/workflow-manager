@@ -24,12 +24,12 @@
             <td th:text="${product.productId}"></td>
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDescription}"></td>
-<!--            <td>-->
-<!--                <a th:href="@{/users/edit/{userId}(userId=${user.id})}">Edit</a>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--                <a th:href="@{/users/delete/{userId}(userId=${user.id})}">Delete</a>-->
-<!--            </td>-->
+            <td>
+                <a th:href="@{/manager/product/edit/{productId}(productId=${product.productId})}">Edit</a>
+            </td>
+            <td>
+                <a>Delete</a>
+            </td>
         </tr>
         </tbody>
     </table>
