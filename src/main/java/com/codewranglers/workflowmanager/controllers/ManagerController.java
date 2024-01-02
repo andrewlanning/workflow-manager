@@ -94,6 +94,15 @@ public class ManagerController {
         return "redirect:/manager/product";
     }
 
+    @GetMapping("/product/delete/{productId}")
+    public String deleteUser(@PathVariable int productId) {
+        Optional<Product> optProduct = productRepository.findById(productId);
+        if (optProduct.isPresent()) {
+            productRepository.deleteById(productId);
+        }
+        return "redirect:/manager/product";
+    }
+
     @GetMapping("/operation")
     public String renderOperationPortal(Model model) {
         // Logic for displaying Operations page
