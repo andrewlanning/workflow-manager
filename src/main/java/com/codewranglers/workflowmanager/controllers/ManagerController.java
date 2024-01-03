@@ -163,4 +163,13 @@ public class ManagerController {
         }
         return "redirect:/manager/operation";
     }
+
+    @GetMapping("/operation/delete/{operationId}")
+    public String deleteOperation(@PathVariable int operationId) {
+        Optional<Operation> optOperation = operationRepository.findById(operationId);
+        if (optOperation.isPresent()) {
+            operationRepository.deleteById(operationId);
+        }
+        return "redirect:/manager/operation";
+    }
 }

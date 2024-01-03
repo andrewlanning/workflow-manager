@@ -31,9 +31,9 @@
             <td>
                 <a th:href="@{/manager/operation/edit/{operationId}(operationId=${operation.operationId})}">Edit</a>
             </td>
-<!--            <td>-->
-<!--                <a th:href="@{/manager/product/delete/{productId}(productId=${product.productId})}" onclick="return confirm('Are you sure you want to Delete this Product?')">Delete</a>-->
-<!--            </td>-->
+            <td>
+                <a th:href="@{/manager/operation/delete/{operationId}(operationId=${operation.operationId})}" onclick="return confirm('Are you sure you want to Delete this Operation?')">Delete</a>
+            </td>
         </tr>
         </tbody>
     </table>
