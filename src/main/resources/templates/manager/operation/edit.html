@@ -5,15 +5,20 @@
     <title>Edit User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-
-<div th:replace="fragments :: page-header"></div>
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
+<header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
+        <li class="list-item">
+            <a th:href="@{/manager/operation}">Back</a>
+        </li>
+    </ul>
+</header>
 <div class="container">
-    <h1>Edit Product</h1>
+    <h1>Edit Operation</h1>
     <form th:action="@{/manager/operation/edit/{operationId}(operationId=${operation.operationId})}" method="post" th:object="${operation}">
 
         <div class="form-group">
-            <label for="operationName">Product Name</label>
+            <label for="operationName">Operation Name:</label>
             <input type="text" class="form-control" id="operationName" th:field="*{opName}">
         </div>
         <div class="form-group">
@@ -32,7 +37,9 @@
                         th:text="${product.productName}"></option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <br>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a type="button" th:href="@{/manager/operation}" class="btn btn-light">Cancel</a>
     </form>
 </div>
 
