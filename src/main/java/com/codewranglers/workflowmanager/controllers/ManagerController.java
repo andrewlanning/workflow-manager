@@ -126,4 +126,41 @@ public class ManagerController {
         operationRepository.save(operation);
         return "redirect:/manager/operation";
     }
+
+
+    @GetMapping("/operation/edit/{operationId}")
+    public String displayEditOperationForm(Model model, @PathVariable int operationId) {
+        Optional<Operation> operationById = operationRepository.findById(operationId);
+        if (operationById.isPresent()) {
+            Operation operation = operationById.get();
+            model.addAttribute("title", "Edit Operation");
+            model.addAttribute("operation", operation);
+            model.addAttribute("products", productRepository.findAll());
+            return "manager/operation/edit";
+        } else {
+            return "redirect:manager/operation/edit";
+        }
+    }
+
+    @PostMapping("/operation/edit/{operationId}")
+    public String processEditOperationForm(@PathVariable int operationId,
+                                           @ModelAttribute @Valid Operation editedOperation,
+                                           Errors errors, Model model) {
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Edit Operation");
+            return "manager/operation/edit";
+        }
+
+        Optional<Operation> operationById = operationRepository.findById(operationId);
+        if (operationById.isPresent()) {
+            Operation operation = operationById.get();
+            operation.setOpName(editedOperation.getOpName());
+            operation.setOpNumber(editedOperation.getOpNumber());
+            operation.setOpText(editedOperation.getOpText());
+            operation.setProduct(editedOperation.getProduct());
+            operationRepository.save(operation);
+        }
+        return "redirect:/manager/operation";
+    }
 }
