@@ -1,7 +1,9 @@
 package com.codewranglers.workflowmanager.controllers;
 
+import com.codewranglers.workflowmanager.models.Operation;
 import com.codewranglers.workflowmanager.models.Product;
 import com.codewranglers.workflowmanager.models.User;
+import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class ManagerController {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private OperationRepository operationRepository;
 
     @GetMapping("")
     public String renderManagerPortal(Model model) {
@@ -74,8 +78,9 @@ public class ManagerController {
             return "redirect:manager/product/edit";
         }
     }
+
     @PostMapping("/product/edit/{productId}")
-    public String processEditUserForm(@PathVariable int productId,
+    public String processEditProductForm(@PathVariable int productId,
                                       @ModelAttribute @Valid Product editedProduct,
                                       Errors errors, Model model) {
 
@@ -95,7 +100,7 @@ public class ManagerController {
     }
 
     @GetMapping("/product/delete/{productId}")
-    public String deleteUser(@PathVariable int productId) {
+    public String deleteProduct(@PathVariable int productId) {
         Optional<Product> optProduct = productRepository.findById(productId);
         if (optProduct.isPresent()) {
             productRepository.deleteById(productId);
@@ -105,7 +110,20 @@ public class ManagerController {
 
     @GetMapping("/operation")
     public String renderOperationPortal(Model model) {
-        // Logic for displaying Operations page
+        model.addAttribute("operations", operationRepository.findAll());
         return "/manager/operation/index";
+    }
+
+    @GetMapping("/operation/add")
+    public String renderOperationCreationPortal(Model model) {
+        model.addAttribute("products", productRepository.findAll());
+        model.addAttribute("operations", new Operation());
+        return "/manager/operation/create_operation";
+    }
+
+    @PostMapping("/operation/add")
+    public String processOperationCreation(@ModelAttribute("operations") Operation operation) {
+        operationRepository.save(operation);
+        return "redirect:/manager/operation";
     }
 }

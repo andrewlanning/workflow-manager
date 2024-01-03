@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width"/>
+    <title></title>
+    <link rel="stylesheet" th:href="@{/global-styles.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
+<div th:replace="fragments :: page-header"></div>
+<section id="page" class="container-md">
+    <h1>Operations List</h1>
+    <a th:href="@{/manager/operation/add}" class="btn btn-primary create">Create New Operation</a>
+    <table class="table table-striped table-content table-dark">
+        <thead>
+        <tr>
+            <th>OperationId</th>
+            <th>OperationName</th>
+            <th>OperationNumber</th>
+            <th>OperationText</th>
+            <th>ProductId</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="operation : ${operations}">
+            <td th:text="${operation.operationId}"></td>
+            <td th:text="${operation.opName}"></td>
+            <td th:text="${operation.opNumber}"></td>
+            <td th:text="${operation.opText}"></td>
+            <td th:text="${operation.product.productId}"></td>
+<!--            <td>-->
+<!--                <a th:href="@{/manager/product/edit/{productId}(productId=${product.productId})}">Edit</a>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                <a th:href="@{/manager/product/delete/{productId}(productId=${product.productId})}" onclick="return confirm('Are you sure you want to Delete this Product?')">Delete</a>-->
+<!--            </td>-->
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

@@ -16,14 +16,19 @@ import jakarta.persistence.*;
  */
 
 @Entity
+@Table(name = "operation")
 public class Operation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "operation_id")
     private Integer operationId;
 
+    @Column(name = "op_name")
     private String opName;
+    @Column(name = "op_number")
     private int opNumber;
+    @Column(name = "op_text")
     private String opText;
 
     @ManyToOne
@@ -33,6 +38,10 @@ public class Operation {
     public Operation(String opName, String opText) {
         this.opName = opName;
         this.opText = opText;
+    }
+
+    public Operation() {
+
     }
 
     public int getOperationId() {
