@@ -1,8 +1,10 @@
 package com.codewranglers.workflowmanager.controllers;
 
+import com.codewranglers.workflowmanager.models.Lot;
 import com.codewranglers.workflowmanager.models.Operation;
 import com.codewranglers.workflowmanager.models.Product;
 import com.codewranglers.workflowmanager.models.User;
+import com.codewranglers.workflowmanager.models.data.LotRepository;
 import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import jakarta.validation.Valid;
@@ -24,6 +26,8 @@ public class ManagerController {
     private ProductRepository productRepository;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private LotRepository lotRepository;
 
     @GetMapping("")
     public String renderManagerPortal(Model model) {
@@ -62,7 +66,22 @@ public class ManagerController {
 
     @PostMapping("/product/add")
     public String processProductCreation(@ModelAttribute("product") Product product) {
+        Lot lot = new Lot();
         productRepository.save(product);
+        int lotNumber = 0;
+        Iterable<Lot> lots = lotRepository.findAll();
+        if (lots == null){
+            lot.setLotNumber(String.format("%04d",0001));
+            lot.setProduct(product);
+        }else {
+            for (Lot l: lots){
+                lotNumber = Integer.parseInt(l.getLotNumber());
+            }
+            lotNumber++;
+            lot.setLotNumber(String.format("%04d",lotNumber));
+            lot.setProduct(product);
+        }
+        lotRepository.save(lot);
         return "redirect:/manager/product";
     }
 
@@ -103,6 +122,8 @@ public class ManagerController {
     public String deleteProduct(@PathVariable int productId) {
         Optional<Product> optProduct = productRepository.findById(productId);
         if (optProduct.isPresent()) {
+            Lot byproduct = lotRepository.findByproduct(optProduct.orElse(null));
+            lotRepository.deleteById(byproduct.getLotId());
             productRepository.deleteById(productId);
         }
         return "redirect:/manager/product";
