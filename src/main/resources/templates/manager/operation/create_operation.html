@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <meta charset=\"UTF-8\">
+    <meta charset="UTF-8"/>
     <title>Operation Creation Portal</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
@@ -14,7 +13,7 @@
         </li>
     </ul>
 </header>
-<div class="container">
+<section class="container">
     <h1>Operation Creation Portal</h1>
     <form th:action="@{/manager/operation/add}" method="post" th:object="${operations}">
 
@@ -33,7 +32,7 @@
         <div class="form-group">
             <label for="productName">Select Product:</label>
             <select class="form-select" th:field="*{product}" id="productName" required>
-                <option value="" selected>Please Select a Product.</option>
+                <option value="" selected>Please Select a Product</option>
                 <option th:each="product : ${products}"
                         th:value="${product.productId}"
                         th:text="${product.productName}"></option>
@@ -43,7 +42,7 @@
         <button type="submit" class="btn btn-primary">Create</button>
         <a type="button" th:href="@{/manager/operation}" class="btn btn-light">Cancel</a>
     </form>
-</div>
+</section>
 
 </body>
 </html>

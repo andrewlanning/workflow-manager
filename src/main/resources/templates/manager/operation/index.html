@@ -7,7 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
-<div th:replace="fragments :: page-header"></div>
+<header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
+        <li class="list-item">
+            <a th:href="@{/manager}" class="btn btn-light">Home</a>
+        </li>
+    </ul>
+</header>
 <section id="page" class="container-md">
     <h1>Operations List</h1>
     <a th:href="@{/manager/operation/add}" class="btn btn-primary create">Create New Operation</a>
