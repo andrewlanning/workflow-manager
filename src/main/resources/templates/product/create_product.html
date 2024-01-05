@@ -10,13 +10,13 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a th:href="@{/manager/product}">Back</a>
+            <a th:href="@{/product}">Back</a>
         </li>
     </ul>
 </header>
 <section class="container">
     <h1>Product Creation Portal</h1>
-    <form th:action="@{/manager/product/add}" method="post" th:object="${product}">
+    <form th:action="@{/product/add}" method="post" th:object="${product}">
         <div class="form-group">
             <label for="productName">Product Name:</label><br>
             <input type="text" class="form-control" id="productName" th:field="*{productName}" required>
@@ -29,7 +29,7 @@
         </div>
         <br>
         <button type="submit" class="btn btn-primary">Create</button>
-        <a type="button" th:href="@{/manager/product}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/product}" class="btn btn-light">Cancel</a>
     </form>
 </section>
 
