@@ -9,13 +9,13 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a th:href="@{/manager/operation}">Back</a>
+            <a th:href="@{/operation}">Back</a>
         </li>
     </ul>
 </header>
 <div class="container">
     <h1>Edit Operation</h1>
-    <form th:action="@{/manager/operation/edit/{operationId}(operationId=${operation.operationId})}" method="post" th:object="${operation}">
+    <form th:action="@{/operation/edit/{operationId}(operationId=${operation.operationId})}" method="post" th:object="${operation}">
 
         <div class="form-group">
             <label for="operationName">Operation Name:</label>
@@ -39,7 +39,7 @@
         </div>
         <br>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a type="button" th:href="@{/manager/operation}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/operation}" class="btn btn-light">Cancel</a>
     </form>
 </div>
 
