@@ -12,21 +12,21 @@
     <h1>User Creation Portal</h1>
     <form th:action="@{/users/add}" method="post" th:object="${user}" style="margin-top:1rem;">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="basic-addon1" th:field="*{firstname}">
+            <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="basic-addon1" th:field="*{firstname}" required>
         </div>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{lastname}">
-        </div>
-
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" th:field="*{username}">
+            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{lastname}" required>
         </div>
 
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Password" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{password}">
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" th:field="*{username}" required>
+        </div>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Password" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{password}" required>
         </div>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" th:field="*{email}">
+            <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" th:field="*{email}" required>
         </div>
 
         <div class="form-group">

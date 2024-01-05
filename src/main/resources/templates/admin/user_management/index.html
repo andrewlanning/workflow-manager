@@ -34,7 +34,7 @@
                     <a th:href="@{/users/edit/{userId}(userId=${user.id})}">Edit</a>
                 </td>
                 <td>
-                    <a th:href="@{/users/delete/{userId}(userId=${user.id})}">Delete</a>
+                    <a th:href="@{/users/delete/{userId}(userId=${user.id})}" onclick="return confirm('Are you sure you want to Delete this User?')">Delete</a>
                 </td>
             </tr>
             </tbody>
