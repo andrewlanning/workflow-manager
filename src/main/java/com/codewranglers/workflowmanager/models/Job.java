@@ -46,8 +46,8 @@ public class Job {
     @JoinColumn(name = "lot_id")
     private Lot lot; // Automatically generated upon object creation
 
-    @OneToMany(mappedBy = "job")
-    private List<Part> partsList;
+//    @OneToMany(mappedBy = "job")
+//    private List<Part> partsList;
 
     @Column(name = "is_completed")
     private Boolean isComplete; // When process is exhausted: True
@@ -102,13 +102,13 @@ public class Job {
         this.lot = lot;
     }
 
-    public List<Part> getPartsList() {
-        return partsList;
-    }
-
-    public void setPartsList(List<Part> partsList) {
-        this.partsList = partsList;
-    }
+//    public List<Part> getPartsList() {
+//        return partsList;
+//    }
+//
+//    public void setPartsList(List<Part> partsList) {
+//        this.partsList = partsList;
+//    }
 
     public Boolean getComplete() {
         return isComplete;

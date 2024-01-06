@@ -3,30 +3,42 @@ package com.codewranglers.workflowmanager.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "part")
 public class Part {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer partId;
-
+    @Column(name = "ser_number")
     private String serNum;
 
+    @Column(name = "part_name")
+    private String partName;
+    @Column(name = "part_lotnum")
+    private String lot;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    @Transient
+    private int partQuantity;
 
-    @ManyToOne
-    @JoinColumn(name = "lot_id")
-    private Lot lot;
-
-    @ManyToOne
-    @JoinColumn(name = "job_id")
-    private Job job;
-
-    public Part(String serNum, Product product, Lot lot) {
+    public Part(String partName, String serNum, String lot, Product product, int partQuantity) {
+        this.partName = partName;
         this.serNum = serNum;
-        this.product = product;
         this.lot = lot;
+        this.product = product;
+        this.partQuantity = partQuantity;
+    }
+
+    public Part() {
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 
     public int getPartId() {
@@ -49,19 +61,19 @@ public class Part {
         this.product = product;
     }
 
-    public Lot getLot() {
+    public String getLot() {
         return lot;
     }
 
-    public void setLot(Lot lot) {
+    public void setLot(String lot) {
         this.lot = lot;
     }
 
-    public Job getJob() {
-        return job;
+    public int getPartQuantity() {
+        return partQuantity;
     }
 
-    public void setJob(Job job) {
-        this.job = job;
+    public void setPartQuantity(int partQuantity) {
+        this.partQuantity = partQuantity;
     }
 }
