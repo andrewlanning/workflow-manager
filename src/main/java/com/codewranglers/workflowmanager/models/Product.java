@@ -116,4 +116,8 @@ public class Product {
     public void setPartsList(List<Part> partsList) {
         this.partsList = partsList;
     }
+
+    public Image getImage() {
+        return image;
+    }
 }

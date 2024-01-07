@@ -57,7 +57,7 @@ public class ProductController {
                 Image image = new Image(imageUrl);
                 image.setProduct(product);
                 product.setImage(image);
-                //Update the image to the image table
+                //Update image and product tables
                 productRepository.save(product);
                 imageRepository.save(image);
             }

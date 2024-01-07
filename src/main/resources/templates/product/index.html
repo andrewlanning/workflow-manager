@@ -32,6 +32,9 @@
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDescription}"></td>
             <td>
+                <img th:src="${product.image.url}" style="width:100px;">
+            </td>
+            <td>
                 <a th:href="@{/product/edit/{productId}(productId=${product.productId})}">Edit</a>
             </td>
             <td>
