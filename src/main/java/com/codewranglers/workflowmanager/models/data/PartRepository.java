@@ -10,4 +10,6 @@ import java.util.List;
 public interface PartRepository extends CrudRepository<Part, Integer> {
 
     List<Part> findBypartName(String name);
+
+    List<Part> findBylot(String lotNum);
 }

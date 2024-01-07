@@ -14,13 +14,22 @@
     </ul>
 </header>
 <div class="container">
-    <h1>Edit Part</h1>
-    <form th:action="@{/part/edit/{partId}(partId=${part.partId})}" method="post"
+    <h1>Edit Parts By Lot Number</h1>
+    <form th:action="@{/part/edit/lot}" method="post"
           th:object="${part}">
 
         <div class="form-group">
             <label for="partName">Part Name</label>
             <input type="text" class="form-control" id="partName" th:field="*{partName}" minlength="3">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="lotNum">Select Lot Number:</label>
+            <select class="form-select" th:field="*{lot}" id="lotNum" required>
+                <option th:each="lotNumber : ${lotNumbers}"
+                        th:value="${lotNumber}"
+                        th:text="${lotNumber}"></option>
+            </select>
         </div>
         <br>
         <div class="form-group">

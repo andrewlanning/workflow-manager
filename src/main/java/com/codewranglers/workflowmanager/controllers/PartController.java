@@ -46,14 +46,14 @@ public class PartController {
         List<Part> totalParts = new ArrayList<>();
         if (bypartName.isEmpty()) {
             for (int i = 1; i < part.getPartQuantity() + 1; i++) {
-                part.setLot(String.format("%03d", 1));
+                part.setLot(String.format("%04d", 1));
                 part.setSerNum("SN" + part.getProduct().getProductId() + "-" + part.getPartName().substring(0, 3).toUpperCase() + String.format("%03d", i));
                 totalParts.add(new Part(part.getPartName(), part.getSerNum(), part.getLot(), part.getProduct(), i));
             }
         } else {
             int serNum = 0;
             int lotNum = 0;
-            for (Part p : bypartName){
+            for (Part p : bypartName) {
                 serNum = Integer.parseInt(p.getSerNum().substring(8));
                 lotNum = Integer.parseInt(p.getLot()) + 1;
             }
@@ -75,6 +75,7 @@ public class PartController {
             Part part = partById.get();
             model.addAttribute("title", "Edit Part");
             model.addAttribute("part", part);
+            model.addAttribute("products", productRepository.findAll());
             return "/part/edit";
         } else {
             return "redirect:/part/edit";
@@ -92,11 +93,82 @@ public class PartController {
         }
 
         Optional<Part> partById = partRepository.findById(partId);
+        List<Part> bypartName = partRepository.findBypartName(editedPart.getPartName());
         if (partById.isPresent()) {
             Part part = partById.get();
-            part.setPartName(editedPart.getPartName());
+            part.setProduct(editedPart.getProduct());
+
+            if (!part.getPartName().equals(editedPart.getPartName())) {
+                part.setPartName(editedPart.getPartName());
+
+                if (bypartName == null) {
+                    part.setSerNum("SN" + part.getProduct().getProductId() + "-" + part.getPartName().substring(0, 3).toUpperCase() + String.format("%03d", 1));
+                } else {
+                    int serNum = 0;
+                    for (Part p : bypartName) {
+                        serNum = Integer.parseInt(p.getSerNum().substring(8));
+                    }
+                    serNum++;
+                    part.setSerNum("SN" + part.getProduct().getProductId() + "-" + part.getPartName().substring(0, 3).toUpperCase() + String.format("%03d", serNum));
+
+                }
+            }
             partRepository.save(part);
         }
+        return "redirect:/part";
+    }
+
+    @GetMapping("/edit/lot")
+    public String displayEditPartLotForm(Model model) {
+        Iterable<Part> all = partRepository.findAll();
+        List<String> lotNumList = new ArrayList<>();
+        int i  = 1;
+        for (Part p : all){
+            int lot = Integer.parseInt(p.getLot());
+            if (lot == i){
+                lotNumList.add(String.format("%04d", lot));
+                i++;
+            }
+        }
+        model.addAttribute("title", "Edit Part");
+        model.addAttribute("part", new Part());
+        model.addAttribute("lotNumbers", lotNumList);
+        model.addAttribute("products", productRepository.findAll());
+        return "/part/edit_lot";
+    }
+
+    @PostMapping("/edit/lot")
+    public String processEditPartLotForm(@ModelAttribute @Valid Part editedPart,
+                                         Errors errors, Model model) {
+
+//        if (errors.hasErrors()) {
+//            model.addAttribute("title", "Edit Part");
+//            return "/part/edit";
+//        }
+//
+//        Optional<Part> partById = partRepository.findById(lotNum);
+//        List<Part> bypartName = partRepository.findBypartName(editedPart.getPartName());
+//        if (partById.isPresent()) {
+//            Part part = partById.get();
+//            part.setProduct(editedPart.getProduct());
+//
+//            if (!part.getPartName().equals(editedPart.getPartName())) {
+//                part.setPartName(editedPart.getPartName());
+//
+//                if (bypartName == null) {
+//                    part.setSerNum("SN" + part.getProduct().getProductId() + "-" + part.getPartName().substring(0, 3).toUpperCase() + String.format("%03d", 1));
+//                } else {
+//                    int serNum = 0;
+//                    for (Part p : bypartName) {
+//                        serNum = Integer.parseInt(p.getSerNum().substring(8));
+//                    }
+//                    serNum++;
+//                    part.setSerNum("SN" + part.getProduct().getProductId() + "-" + part.getPartName().substring(0, 3).toUpperCase() + String.format("%03d", serNum));
+//
+//                }
+//            }
+//            partRepository.save(part);
+//        }
         return "redirect:/part";
     }
 
