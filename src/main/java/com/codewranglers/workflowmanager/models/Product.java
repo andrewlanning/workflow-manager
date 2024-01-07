@@ -42,7 +42,7 @@ public class Product {
     @Column(name = "product_name")
     private String productName; // Unique name associated to the product (ie: 'Jefferson Grandfather Clock')
     @NotBlank(message = "Product Description is required")
-    @Size(max = 500, message = "Product Description must be less than 500 characters")
+    @Size(max = 255, message = "Product Description must be less than 255 characters")
     @Column(name = "product_description")
     private String productDescription;
 
