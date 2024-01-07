@@ -27,10 +27,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="text-center" th:each="product : ${products}">
+        <tr th:each="product : ${products}">
             <td th:text="${product.productId}"></td>
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDescription}"></td>
+<!--            <td th:if="${product.image != null and product.image.url != null}">-->
+<!--                <img th:src="${product.image.url}" style="width:100px;">-->
+<!--            </td>-->
+            <td style="width:100px;">
+                <img th:if="${product.image != null and product.image.url != null}" th:src="${product.image.url}" style="width:100px;">
+            </td>
             <td>
                 <a th:href="@{/product/edit/{productId}(productId=${product.productId})}">Edit</a>
             </td>

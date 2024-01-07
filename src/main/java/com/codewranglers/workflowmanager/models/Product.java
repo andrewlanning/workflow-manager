@@ -42,9 +42,13 @@ public class Product {
     @Column(name = "product_name")
     private String productName; // Unique name associated to the product (ie: 'Jefferson Grandfather Clock')
     @NotBlank(message = "Product Description is required")
-    @Size(max = 500, message = "Product Description must be less than 500 characters")
+    @Size(max = 255, message = "Product Description must be less than 255 characters")
     @Column(name = "product_description")
     private String productDescription;
+
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
+    private Image image;  //image associated with the product
 
     @OneToMany(mappedBy="product")
     private List<Operation> operationList; // A list of operation objects assigned to this product.
@@ -63,6 +67,10 @@ public class Product {
 
     public Product() {
 
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public int getProductId() {
@@ -107,5 +115,9 @@ public class Product {
 
     public void setPartsList(List<Part> partsList) {
         this.partsList = partsList;
+    }
+
+    public Image getImage() {
+        return image;
     }
 }
