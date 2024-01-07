@@ -31,7 +31,7 @@
             <td th:text="${product.productId}"></td>
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDescription}"></td>
-            <td>
+            <td th:if="${product.image != null and product.image.url != null}">
                 <img th:src="${product.image.url}" style="width:100px;">
             </td>
             <td>

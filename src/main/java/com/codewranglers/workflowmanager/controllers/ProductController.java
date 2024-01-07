@@ -51,7 +51,7 @@ public class ProductController {
                                          @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
         //handler method return image URL here
         //logic to add image attribute to product and product attribute to image
-        if (!productImage.isEmpty()) {
+        if (productImage != null && !productImage.isEmpty()) {
             String imageUrl = uploadImageAndGetUrl(productImage);
             if (imageUrl != null) {
                 Image image = new Image(imageUrl);
