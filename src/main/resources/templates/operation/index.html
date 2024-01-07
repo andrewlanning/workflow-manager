@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width"/>
+    <title></title>
+    <link rel="stylesheet" th:href="@{/global-styles.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
+<header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
+        <li class="list-item">
+            <a th:href="@{/manager}" class="btn btn-light">Home</a>
+        </li>
+    </ul>
+</header>
+<section id="page" class="container-md">
+    <h1>Operations List</h1>
+    <a th:href="@{/operation/add}" class="btn btn-primary create">Create New Operation</a>
+    <table class="table table-striped table-content table-dark">
+        <thead>
+        <tr class="text-center">
+            <th>OperationId</th>
+            <th>OperationName</th>
+            <th>OperationNumber</th>
+            <th>OperationText</th>
+            <th>ProductId</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="operation : ${operations}">
+            <td th:text="${operation.operationId}"></td>
+            <td th:text="${operation.opName}"></td>
+            <td th:text="${operation.opNumber}"></td>
+            <td th:text="${operation.opText}"></td>
+            <td th:text="${operation.product.productId}"></td>
+            <td>
+                <a th:href="@{/operation/edit/{operationId}(operationId=${operation.operationId})}">Edit</a>
+            </td>
+            <td>
+                <a th:href="@{/operation/delete/{operationId}(operationId=${operation.operationId})}" onclick="return confirm('Are you sure you want to Delete this Operation?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

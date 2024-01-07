@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "lot")
 public class Lot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lot_id")
     private Integer lotId;
 
+    @Column(name = "lot_number")
     private String lotNumber; // Automatically Generated
 
     @OneToMany(mappedBy = "lot")
@@ -24,6 +27,10 @@ public class Lot {
         this.lotNumber = lotNumber;
         this.partsList = partsList;
         this.product = product;
+    }
+
+    public Lot() {
+
     }
 
     public int getLotId() {

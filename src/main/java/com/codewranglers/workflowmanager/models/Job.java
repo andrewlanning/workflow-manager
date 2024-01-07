@@ -1,7 +1,10 @@
 package com.codewranglers.workflowmanager.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.util.Date;
 import java.util.List;
 
 /*
@@ -18,20 +21,25 @@ import java.util.List;
  */
 
 @Entity
+@Table(name = "job")
 public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "job_id")
     private Integer jobId;
 
+    @Column(name = "wo_number")
     private String workOrderNumber; // ie: WO1234
 
+    @Column(name = "current_step")
     private int currentStep; // ie: 001 ultimately appended to workOrderNumber ie WO1234.001
 
+    @Column(name = "quantity")
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name= "product_id")
+    @JoinColumn(name = "product_id")
     private Product product; // User will select Product from list. Defining product here.
 
     @OneToOne
@@ -41,19 +49,30 @@ public class Job {
     @OneToMany(mappedBy = "job")
     private List<Part> partsList;
 
+    @Column(name = "is_completed")
     private Boolean isComplete; // When process is exhausted: True
 
-    private String startDate; // java.util.date : format MM-DD-YYYY
+    @Column(name = "start_date")
+    @CreatedDate
+    private Date startDate; // java.util.date : format MM-DD-YYYY
 
-    private String dueDate;
+    @Column(name = "due_date")
+    private Date dueDate;
 
-    public Job(Product product, int quantity, String startDate, String dueDate) {
+    @Column(name = "completion_date")
+    @Nullable
+    private Date completionDate;
+
+    public Job(Product product, int quantity, Date startDate, Date dueDate, Date completionDate) {
         this.product = product;
         this.quantity = quantity;
         this.startDate = startDate;
         this.dueDate = dueDate;
+        this.completionDate = completionDate;
     }
-    public Job() {}
+
+    public Job() {
+    }
 
     public int getJobId() {
         return jobId;
@@ -99,20 +118,28 @@ public class Job {
         isComplete = complete;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public Date getCompletionDate() {
+        return completionDate;
+    }
+
+    public void setCompletionDate(Date completaionDate) {
+        this.completionDate = completaionDate;
     }
 }
 
