@@ -28,6 +28,13 @@
                       required></textarea>
         </div>
         <br>
+        <div class="form-group">
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Upload Product Photo</label>
+                <input class="form-control" type="file" id="formFile" accept="image/png, image/jpeg" name="productImage">
+            </div>
+        </div>
+        <br>
         <button type="submit" class="btn btn-primary">Create</button>
         <a type="button" th:href="@{/product}" class="btn btn-light">Cancel</a>
     </form>
