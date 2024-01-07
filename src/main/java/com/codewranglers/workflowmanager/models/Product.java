@@ -69,6 +69,10 @@ public class Product {
 
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public int getProductId() {
         return productId;
     }

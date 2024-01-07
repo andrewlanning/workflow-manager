@@ -16,7 +16,7 @@
 </header>
 <section class="container">
     <h1>Product Creation Portal</h1>
-    <form th:action="@{/product/add}" method="post" th:object="${product}">
+    <form th:action="@{/product/add}" method="post" th:object="${product}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="productName">Product Name:</label><br>
             <input type="text" class="form-control" id="productName" th:field="*{productName}" required>

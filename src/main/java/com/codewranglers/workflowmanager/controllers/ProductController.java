@@ -1,6 +1,8 @@
 package com.codewranglers.workflowmanager.controllers;
 
+import com.codewranglers.workflowmanager.models.Image;
 import com.codewranglers.workflowmanager.models.Product;
+import com.codewranglers.workflowmanager.models.data.ImageRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +31,9 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @GetMapping("")
     public String renderProductPortal(Model model) {
         model.addAttribute("products", productRepository.findAll());
@@ -42,9 +47,21 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public String processProductCreation(@ModelAttribute("product") Product product) {
+    public String processProductCreation(@ModelAttribute("product") Product product,
+                                         @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
         //handler method return image URL here
         //logic to add image attribute to product and product attribute to image
+        if (!productImage.isEmpty()) {
+            String imageUrl = uploadImageAndGetUrl(productImage);
+            if (imageUrl != null) {
+                Image image = new Image(imageUrl);
+                image.setProduct(product);
+                product.setImage(image);
+                //Update the image to the image table
+                productRepository.save(product);
+                imageRepository.save(image);
+            }
+        }
         productRepository.save(product);
         return "redirect:/product";
     }

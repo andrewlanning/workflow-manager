@@ -27,7 +27,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="text-center" th:each="product : ${products}">
+        <tr th:each="product : ${products}">
             <td th:text="${product.productId}"></td>
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDescription}"></td>
