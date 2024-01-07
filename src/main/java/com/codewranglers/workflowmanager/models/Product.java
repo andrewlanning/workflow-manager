@@ -46,6 +46,10 @@ public class Product {
     @Column(name = "product_description")
     private String productDescription;
 
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
+    private Image image;  //image associated with the product
+
     @OneToMany(mappedBy="product")
     private List<Operation> operationList; // A list of operation objects assigned to this product.
 
