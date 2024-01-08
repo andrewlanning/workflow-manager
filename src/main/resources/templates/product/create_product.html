@@ -31,7 +31,10 @@
         <div class="form-group">
             <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Product Photo</label>
-                <input class="form-control" type="file" id="formFile" accept="image/png, image/jpeg" name="productImage">
+                <input class="form-control" type="file" id="formFile" accept="image/png, image/jpeg" name="productImage" onchange="previewImage();">
+            </div>
+            <div id="imagePreview" style="display: none;">
+                <img id="preview" src="#" alt="Image Preview" style="width: 200px;" />
             </div>
         </div>
         <br>
@@ -41,4 +44,23 @@
 </section>
 
 </body>
+<script>
+    function previewImage() {
+        var preview = document.getElementById('preview');
+        var file = document.getElementById('formFile').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+    }
+</script>
 </html>
