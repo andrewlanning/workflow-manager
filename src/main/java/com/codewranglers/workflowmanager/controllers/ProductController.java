@@ -82,7 +82,9 @@ public class ProductController {
     @PostMapping("/edit/{productId}")
     public String processEditProductForm(@PathVariable int productId,
                                          @ModelAttribute @Valid Product editedProduct,
-                                         Errors errors, Model model) {
+                                         Errors errors,
+                                         Model model,
+                                         @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Edit Product");
@@ -94,6 +96,16 @@ public class ProductController {
             Product product = productById.get();
             product.setProductName(editedProduct.getProductName());
             product.setProductDescription(editedProduct.getProductDescription());
+            if (productImage != null && !productImage.isEmpty()) {  //if a new image is selected
+                Image oldImage = product.getImage();
+                if (oldImage != null) {
+                    imageRepository.delete(oldImage); //delete old image from image table
+                }
+                String imageUrl = uploadImageAndGetUrl(productImage);  //send new image selection to API
+                Image updatedImage = new Image(imageUrl); //create new image object with Url response
+                product.setImage(updatedImage); //link new image to product
+                updatedImage.setProduct(product); //link product to new image
+            }
             productRepository.save(product);
         }
         return "redirect:/product";
