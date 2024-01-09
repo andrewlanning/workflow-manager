@@ -17,7 +17,7 @@
 <div class="container">
     <h1>Edit Product</h1>
     <form th:action="@{/product/edit/{productId}(productId=${product.productId})}" method="post"
-          th:object="${product}">
+          th:object="${product}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="productName">Product Name</label>
             <input type="text" class="form-control" id="productName" th:field="*{productName}">

@@ -10,11 +10,12 @@ public class Image {
     private String url;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name ="product_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     public Image() {
     }
+
     public Image(String url) {
         this.url = url;
     }
@@ -42,4 +43,15 @@ public class Image {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+//    @Override
+//    public String toString() {
+//        return "Image{" +
+//                "id=" + id +
+//                ", url='" + url + '\'' +
+//                ", product=" + product +
+//                '}';
+//    }
+//}
+
 }
