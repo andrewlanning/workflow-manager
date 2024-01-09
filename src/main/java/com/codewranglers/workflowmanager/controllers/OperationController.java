@@ -23,42 +23,54 @@ public class OperationController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping("/{productId}")
+    private int productId;
+
+    @GetMapping("/product_id/{productId}")
     public String renderOperationPortal(Model model, @PathVariable int productId) {
+        String productName = productRepository.findById(productId).get().getProductName();
+        model.addAttribute("productName", productName);
         model.addAttribute("operations", operationRepository.findByproductProductId(productId));
+        this.productId=productId;
         return "/operation/index";
     }
 
-    @GetMapping("/add")
-    public String renderOperationCreationPortal(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+    @GetMapping("/product_id/{productId}/add")
+    public String renderOperationCreationPortal(Model model,  @PathVariable int productId) {
+        String productName = productRepository.findById(productId).get().getProductName();
+        model.addAttribute("productName", productName);
+        model.addAttribute("productId", this.productId);
         model.addAttribute("operations", new Operation());
         return "/operation/create_operation";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/product_id/{productId}/add")
     public String processOperationCreation(@ModelAttribute("operations") Operation operation) {
+        operation.setProduct(new Product(productId));
         operationRepository.save(operation);
-        return "redirect:/operation";
+        return "redirect:/product/operation/product_id/{productId}";
     }
 
 
-    @GetMapping("/edit/{operationId}")
-    public String displayEditOperationForm(Model model, @PathVariable int operationId) {
+    @GetMapping("product_id/{productId}/edit/operation_id/{operationId}")
+    public String displayEditOperationForm(Model model, @PathVariable int operationId, @PathVariable int productId) {
         Optional<Operation> operationById = operationRepository.findById(operationId);
+        String productName = productRepository.findById(productId).get().getProductName();
+        model.addAttribute("productName", productName);
+        model.addAttribute("productId", productId);
+
         if (operationById.isPresent()) {
             Operation operation = operationById.get();
-            model.addAttribute("title", "Edit Operation");
             model.addAttribute("operation", operation);
             model.addAttribute("products", productRepository.findAll());
             return "/operation/edit";
         } else {
-            return "redirect:/operation/edit";
+            return "redirect:/product/operation/product_id/{productId}";
         }
     }
 
-    @PostMapping("/edit/{operationId}")
+    @PostMapping("product_id/{productId}/edit/operation_id/{operationId}")
     public String processEditOperationForm(@PathVariable int operationId,
+                                           @PathVariable int productId,
                                            @ModelAttribute @Valid Operation editedOperation,
                                            Errors errors, Model model) {
 
@@ -71,12 +83,10 @@ public class OperationController {
         if (operationById.isPresent()) {
             Operation operation = operationById.get();
             operation.setOpName(editedOperation.getOpName());
-            operation.setOpNumber(editedOperation.getOpNumber());
             operation.setOpText(editedOperation.getOpText());
-            operation.setProduct(editedOperation.getProduct());
             operationRepository.save(operation);
         }
-        return "redirect:/operation";
+        return "redirect:/product/operation/product_id/{productId}";
     }
 
     @GetMapping("/delete/{operationId}")
@@ -85,6 +95,6 @@ public class OperationController {
         if (optOperation.isPresent()) {
             operationRepository.deleteById(operationId);
         }
-        return "redirect:/operation";
+        return "redirect:/product/operation/product_id/{productId}";
     }
 }
