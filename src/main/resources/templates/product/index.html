@@ -35,11 +35,14 @@
                 <img th:if="${product.image != null and product.image.url != null}" th:src="${product.image.url}" style="width:100px;">
             </td>
             <td>
-                <a th:href="@{/product/edit/{productId}(productId=${product.productId})}">Edit</a>
+                <a th:href="@{/product/operation/{productId}(productId=${product.productId})}" type="button" class="btn btn-primary">Manage Steps</a>
+            </td>
+            <td>
+                <a th:href="@{/product/edit/{productId}(productId=${product.productId})}" type="button" class="btn btn-primary">Edit Product</a>
             </td>
             <td>
                 <a th:href="@{/product/delete/{productId}(productId=${product.productId})}"
-                   onclick="return confirm('Are you sure you want to Delete this Product?')">Delete</a>
+                   onclick="return confirm('Are you sure you want to Delete this Product?')" type="button" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         </tbody>

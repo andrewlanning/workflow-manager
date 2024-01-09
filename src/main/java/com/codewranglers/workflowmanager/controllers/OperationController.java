@@ -1,6 +1,7 @@
 package com.codewranglers.workflowmanager.controllers;
 
 import com.codewranglers.workflowmanager.models.Operation;
+import com.codewranglers.workflowmanager.models.Product;
 import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import jakarta.validation.Valid;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/operation")
+@RequestMapping("/product/operation")
 public class OperationController {
 
     @Autowired
@@ -22,9 +23,9 @@ public class OperationController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping("")
-    public String renderOperationPortal(Model model) {
-        model.addAttribute("operations", operationRepository.findAll());
+    @GetMapping("/{productId}")
+    public String renderOperationPortal(Model model, @PathVariable int productId) {
+        model.addAttribute("operations", operationRepository.findByproductProductId(productId));
         return "/operation/index";
     }
 
