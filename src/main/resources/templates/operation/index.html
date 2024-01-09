@@ -32,7 +32,7 @@
                 <a th:href="@{/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" type="button" class="btn btn-primary">Edit</a>
             </td>
             <td>
-                <a th:href="@{/operation/delete/{operationId}(operationId=${operation.operationId})}" onclick="return confirm('Are you sure you want to Delete this Operation?')" type="button" class="btn btn-danger">Delete</a>
+                <a th:href="@{/product/operation/product_id/{productId}/delete/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" onclick="return confirm('Are you sure you want to Delete this Step?')" type="button" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         </tbody>

@@ -80,6 +80,7 @@ public class OperationController {
         }
 
         Optional<Operation> operationById = operationRepository.findById(operationId);
+        model.addAttribute("productId", productId);
         if (operationById.isPresent()) {
             Operation operation = operationById.get();
             operation.setOpName(editedOperation.getOpName());
@@ -89,9 +90,10 @@ public class OperationController {
         return "redirect:/product/operation/product_id/{productId}";
     }
 
-    @GetMapping("/delete/{operationId}")
-    public String deleteOperation(@PathVariable int operationId) {
+    @GetMapping("product_id/{productId}/delete/operation_id/{operationId}")
+    public String deleteOperation(Model model, @PathVariable int operationId, @PathVariable int productId) {
         Optional<Operation> optOperation = operationRepository.findById(operationId);
+        model.addAttribute("productId", productId);
         if (optOperation.isPresent()) {
             operationRepository.deleteById(operationId);
         }
