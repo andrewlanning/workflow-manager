@@ -56,24 +56,26 @@ public class AdminController {
         return "/admin/user_management/create_user";
     }
 
-    @PostMapping("/user_management/create_user")
-    public String renderUserCreated(@ModelAttribute("user") User user) {
+    //commenting out to test login without errors associated with user password getter/setter :0)
 
-        // Formatting for username
-        String username = user.getLastname().toLowerCase() + user.getFirstname().substring(0, 1).toLowerCase();
-
-        // Formatting for email TODO: consider changing @company.com to something that the admin can set.
-        String email = username + "@company.com";
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-
-        user.setPassword(encodedPassword);
-        user.setUsername(username);
-        user.setEmail(email);
-        userRepository.save(user);
-        return "redirect:/admin/user_management";
-    }
+//    @PostMapping("/user_management/create_user")
+//    public String renderUserCreated(@ModelAttribute("user") User user) {
+//
+//        // Formatting for username
+//        String username = user.getLastname().toLowerCase() + user.getFirstname().substring(0, 1).toLowerCase();
+//
+//        // Formatting for email TODO: consider changing @company.com to something that the admin can set.
+//        String email = username + "@company.com";
+//
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//
+//        user.setPassword(encodedPassword);
+//        user.setUsername(username);
+//        user.setEmail(email);
+//        userRepository.save(user);
+//        return "redirect:/admin/user_management";
+//    }
 
     @GetMapping("/role_management")
     public String renderRoleManagementPortal() {

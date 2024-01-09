@@ -1,6 +1,14 @@
 package com.codewranglers.workflowmanager.models;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.persistence.Column;
+
 
 /*
  * This class provides the model for each User.
@@ -23,8 +31,9 @@ public class User {
     private Integer id;
     @Column(name = "username")
     private String username; // Combo of lastname first initial (ie: lanninga)
-    @Column(name = "password")
-    private String password; // Encoded w/ Bcrypt SHA256
+    @NotNull
+    @Column(name = "pwhash")
+    private String pwhash; // Encoded w/ Bcrypt SHA256
     @Column(name = "firstname")
     private String firstname;
     @Column(name = "lastname")
@@ -36,11 +45,19 @@ public class User {
 
     public User() {
     }
-    public User(String password, String firstname, String lastname) {
-        this.password = password;
+
+    public User(String password, String firstname, String lastname, Integer role) {
+        this.pwhash = encoder.encode(password);
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
+    }
+
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwhash);
     }
 
     public Integer getId() {
@@ -53,14 +70,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstname() {
