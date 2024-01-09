@@ -4,34 +4,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{universal-styles.css}"/>
-
-    <title th:text="${title}">Document</title> <!-- Dynamic title -->
+    <link rel="stylesheet" th:href="@{/global-styles.css}"/> <!--my styles-->
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title th:text="${title}">Document</title>
 </head>
-<body>
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
 <div th:replace="~{fragments :: page-header}"></div>
-<section id='page' class="container">
-    <h1>Administrator Dashboard</h1> <!-- Dynamic heading -->
+<section id='page' class="container-md">
+    <h1>Administrator Dashboard</h1>
     <div id="dashboard" class="row">
         <div th:each="page : ${pages}" class="col-sm">
-            <p th:text="${page}"></p>
-            <!-- Switch on the value of page -->
-            <div th:switch="${page}">
-                <!-- Case for User Management -->
-                <a th:case="'User Management'" th:href="@{/admin/user_management}">
-                    <button th:text="Enter"></button>
-                </a>
-                <!-- Case for Role Management -->
-                <a th:case="'Role Management'" th:href="@{/admin/role_management}">
-                    <button th:text="Enter"></button>
-                </a>
-                <!-- Case for Workflow Management -->
-                <a th:case="'Workflow Management'" th:href="@{/admin/workflow_management}">
-                    <button th:text="Enter"></button>
-                </a>
+            <div class="option-container">
+                <p th:text="${page}"></p>
+                <!-- Switch on the value of page -->
+                <div th:switch="${page}">
+                    <!-- Case for User Management -->
+                    <a th:case="'User Management'" th:href="@{/admin/user_management}">
+                        <button th:text="Enter" class="btn btn-primary"></button>
+                    </a>
+                    <!-- Case for Role Management -->
+                    <a th:case="'Role Management'" th:href="@{/admin/role_management}">
+                        <button th:text="Enter" class="btn btn-primary"></button>
+                    </a>
+                    <!-- Case for Workflow Management -->
+                    <a th:case="'Workflow Management'" th:href="@{/admin/workflow_management}">
+                        <button th:text="Enter" class="btn btn-primary"></button>
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 </section>

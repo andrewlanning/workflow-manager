@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Jobs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<h1>All Jobs</h1>
+
+<a th:href="@{/jobs/add}" class="add-job-btn">Add Job</a>
+
+<!-- Display job information in a table -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <!-- Add more columns as needed -->
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+<!--  Loop through the list of jobs and display them-->
+    <tr th:each="job : ${jobs}">
+        <td th:text="${job.id}"></td>
+        <td th:text="${job.name}"></td>
+        <!-- Add more columns as needed -->
+        <td>
+            <!-- Add links for view, edit, and delete actions -->
+            <a th:href="@{'/jobs/view/' + ${job.id}}">View</a> |
+            <a th:href="@{'/jobs/edit/' + ${job.id}}">Edit</a> |
+            <a th:href="@{'/jobs/delete/' + ${job.id}}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
+<header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
+        <li class="list-item">
+            <a th:href="@{/operation}">Back</a>
+        </li>
+    </ul>
+</header>
+<div class="container">
+    <h1>Edit Operation</h1>
+    <form th:action="@{/operation/edit/{operationId}(operationId=${operation.operationId})}" method="post" th:object="${operation}">
+
+        <div class="form-group">
+            <label for="operationName">Operation Name:</label>
+            <input type="text" class="form-control" id="operationName" th:field="*{opName}">
+        </div>
+        <div class="form-group">
+            <label for="operationNumber">Operation Number:</label>
+            <input type="number" class="form-control" id="operationNumber" th:field="*{opNumber}" required>
+        </div>
+        <div class="form-group">
+            <label for="operationText">Operation Description:</label>
+            <textarea class="form-control" id="operationText" rows="3" th:field="*{opText}" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="productName">Select Product:</label>
+            <select class="form-select" th:field="*{product}" id="productName" required>
+                <option th:each="product : ${products}"
+                        th:value="${product.productId}"
+                        th:text="${product.productName}"></option>
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a type="button" th:href="@{/operation}" class="btn btn-light">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

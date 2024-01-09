@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width"/>
     <title>User Creation Portal</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/global-styles.css}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
 <div th:replace="~{fragments :: page-header}"></div>
-<div class="container">
+<div class="container-md" id="page">
     <h1>User Creation Portal</h1>
-    <form th:action="@{/admin/user_management/create_user}" method="post" th:object="${user}">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="basic-addon1" th:field="*{firstname}">
+    <form th:action="@{/users/add}" method="post" th:object="${user}" style="margin-top:1rem;">
+        <div class="form-group">
+            <label for="firstName">First Name:</label><br>
+            <input type="text" id="firstName" class="form-control" placeholder="First Name" aria-label="First Name"
+                   aria-describedby="basic-addon1" th:field="*{firstname}" required>
         </div>
-<!--        <p>First Name</p>-->
-<!--        <input type="text" th:field="*{firstname}" />-->
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{lastname}">
+        <div class="form-group">
+            <label for="firstName">Last Name:</label><br>
+            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name"
+                   aria-describedby="basic-addon1" th:field="*{lastname}" required>
         </div>
-<!--        <p>Last Name</p>-->
-<!--        <input type="text" th:field="*{lastname}" />-->
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Password" aria-label="Last Name" aria-describedby="basic-addon1" th:field="*{password}">
-        </div>
-<!--        <p>Password</p>-->
-<!--        <input type="password" th:field="*{password}" />-->
-
-
-
-
-<!--        <p>Role Type</p>-->
-<!--        <input type="number" th:field="*{role}" />-->
 
         <div class="form-group">
-            <label for="role">Select Role</label>
+            <label for="firstName">Username:</label><br>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+                   aria-describedby="basic-addon1" th:field="*{username}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="firstName">Password:</label><br>
+            <input type="text" class="form-control" placeholder="Password" aria-label="Last Name"
+                   aria-describedby="basic-addon1" th:field="*{password}" required>
+        </div>
+        <div class="form-group">
+            <label for="firstName">Email:</label><br>
+            <input type="email" class="form-control" placeholder="Email" aria-label="Email"
+                   aria-describedby="basic-addon1" th:field="*{email}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="role">Select Role:</label>
             <select class="form-select" th:field="*{role}" id="role">
                 <option value="1">Product Manager</option>
                 <option value="2">Member</option>
                 <option value="3">Administrator</option>
             </select>
         </div>
-
-        <button class="border" style="display: block; margin-top: 1rem; padding:8px; border-radius:8px;" type="submit">Create User</button>
+        <br>
+        <button class="btn btn-primary" type="submit">Create</button>
+        <a type="button" th:href="@{/admin/user_management}" class="btn btn-light">Cancel</a>
     </form>
 </div>
-
 </body>
 </html>
