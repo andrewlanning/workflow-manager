@@ -69,6 +69,10 @@ public class Product {
 
     }
 
+    public Product(int productId) {
+        this.productId = productId;
+    }
+
     public int getProductId() {
         return productId;
     }

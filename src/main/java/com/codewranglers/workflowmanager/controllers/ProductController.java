@@ -1,8 +1,10 @@
 package com.codewranglers.workflowmanager.controllers;
 
 import com.codewranglers.workflowmanager.models.Image;
+import com.codewranglers.workflowmanager.models.Operation;
 import com.codewranglers.workflowmanager.models.Product;
 import com.codewranglers.workflowmanager.models.data.ImageRepository;
+import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +25,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Controller
 @RequestMapping("/product")
@@ -32,13 +34,41 @@ public class ProductController {
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    OperationRepository operationRepository;
 
     @Autowired
     ImageRepository imageRepository;
 
     @GetMapping("")
     public String renderProductPortal(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+        // Using Map with key Product and Value total steps to show total steps on index page
+        Map<Product, Integer> finalMap = new LinkedHashMap<>();
+
+        int counter;
+        Iterable<Product> products = productRepository.findAll();
+
+        for (Product p : products) {
+            counter = 0;
+
+            List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+
+            if (!operations.isEmpty()) {
+
+                for (Operation o : operations) {
+
+                    if (o != null) {
+                        counter++;
+                    } else {
+                        counter = 0;
+                    }
+                }
+            }
+
+            finalMap.put(p, counter);
+        }
+
+        model.addAttribute("products", finalMap);
         return "/product/index";
     }
 
@@ -108,50 +138,16 @@ public class ProductController {
         return "redirect:/product";
     }
 
-//    @PostMapping("/edit/{productId}")
-//    public String processEditProductForm(@PathVariable int productId,
-//                                         @ModelAttribute @Valid Product editedProduct,
-//                                         Errors errors,
-//                                         Model model,
-//                                         @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
-//
-//        if (errors.hasErrors()) {
-//            model.addAttribute("title", "Edit Product");
-//            return "/product/edit";
-//        }
-//
-//        Optional<Product> productById = productRepository.findById(productId);
-//        if (productById.isPresent()) {
-//            Product product = productById.get();
-//            product.setProductName(editedProduct.getProductName());
-//            product.setProductDescription(editedProduct.getProductDescription());
-//            if (editedProduct.getImage() != null) {   getImage is not going to retrieve image from edit form
-//                System.out.println("Test");
-//                product.setImage(editedProduct.getImage());
-//            }
-//
-//
-//            if (productImage != null && !productImage.isEmpty()) {  //if a new image is selected
-//                if (product.getImage() != null) {
-////                    System.out.println("Product image is not null");
-//                    imageRepository.delete(product.getImage()); //delete old image from image table
-//
-//                }
-//                String imageUrl = uploadImageAndGetUrl(productImage);  //send new image selection to API
-//                Image updatedImage = new Image(imageUrl); //create new image object with Url response
-//                product.setImage(updatedImage); //link new image to product
-//                updatedImage.setProduct(product); //link product to new image
-////                imageRepository.save(updatedImage);
-//            }
-//            productRepository.save(product);
-//        }
-//        return "redirect:/product";
-//    }
-
     @GetMapping("/delete/{productId}")
     public String deleteProduct(@PathVariable int productId) {
         Optional<Product> optProduct = productRepository.findById(productId);
         if (optProduct.isPresent()) {
+            List<Operation> byproductProductId = operationRepository.findByproductProductId(productId);
+
+            if (!byproductProductId.isEmpty()) {
+                operationRepository.deleteAll(byproductProductId);
+            }
+
             productRepository.deleteById(productId);
         }
         return "redirect:/product";

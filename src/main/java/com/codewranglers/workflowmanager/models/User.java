@@ -88,6 +88,14 @@ public class User {
         return email;
     }
 
+    public String getPwhash() {
+        return pwhash;
+    }
+
+    public void setPwhash(String pwhash) {
+        this.pwhash = pwhash;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
