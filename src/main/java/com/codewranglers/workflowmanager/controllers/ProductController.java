@@ -42,14 +42,21 @@ public class ProductController {
 
     @GetMapping("")
     public String renderProductPortal(Model model) {
+        // Using Map with key Product and Value total steps to show total steps on index page
         Map<Product, Integer> finalMap = new LinkedHashMap<>();
+
         int counter;
         Iterable<Product> products = productRepository.findAll();
+
         for (Product p : products) {
             counter = 0;
+
             List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+
             if (!operations.isEmpty()) {
+
                 for (Operation o : operations) {
+
                     if (o != null) {
                         counter++;
                     } else {
@@ -57,12 +64,11 @@ public class ProductController {
                     }
                 }
             }
+
             finalMap.put(p, counter);
         }
 
         model.addAttribute("products", finalMap);
-//        model.addAttribute("counter", totalSteps);
-//        model.addAttribute("products", products);
         return "/product/index";
     }
 
