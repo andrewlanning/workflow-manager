@@ -25,9 +25,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Controller
 @RequestMapping("/product")
@@ -43,7 +42,27 @@ public class ProductController {
 
     @GetMapping("")
     public String renderProductPortal(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+        Map<Product, Integer> finalMap = new LinkedHashMap<>();
+        int counter;
+        Iterable<Product> products = productRepository.findAll();
+        for (Product p : products) {
+            counter = 0;
+            List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+            if (!operations.isEmpty()) {
+                for (Operation o : operations) {
+                    if (o != null) {
+                        counter++;
+                    } else {
+                        counter = 0;
+                    }
+                }
+            }
+            finalMap.put(p, counter);
+        }
+
+        model.addAttribute("products", finalMap);
+//        model.addAttribute("counter", totalSteps);
+//        model.addAttribute("products", products);
         return "/product/index";
     }
 
