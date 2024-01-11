@@ -7,6 +7,7 @@ import com.codewranglers.workflowmanager.models.User;
 import com.codewranglers.workflowmanager.models.data.LotRepository;
 import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
+import com.codewranglers.workflowmanager.models.data.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,9 @@ public class ManagerController {
     @Autowired
     private LotRepository lotRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("")
     public String renderManagerPortal(Model model) {
         List<String> pages = new ArrayList<>();
@@ -50,6 +54,12 @@ public class ManagerController {
     public String renderJobsPortal(Model model) {
         // Logic for displaying Jobs page
         return "/manager/job/index";
+    }
+
+    @GetMapping("/view-workforce")
+    public String renderWorkforceTable (Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "/manager/view-workforce";
     }
 
 

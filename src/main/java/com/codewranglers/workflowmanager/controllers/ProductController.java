@@ -123,7 +123,6 @@ public class ProductController {
             Product product = productById.get();
             product.setProductName(editedProduct.getProductName());
             product.setProductDescription(editedProduct.getProductDescription());
-            //if product image input is not empty, execute the api command, get the url, construct the image
             if (productImage != null && !productImage.isEmpty()) {
                 if (product.getImage() != null) {
                     imageRepository.delete(product.getImage());
@@ -185,6 +184,5 @@ public class ProductController {
         // Retrieve the image URL
         String imageUrl = rootNode.path("image").path("url").asText();
         return imageUrl;
-
     }
 }
