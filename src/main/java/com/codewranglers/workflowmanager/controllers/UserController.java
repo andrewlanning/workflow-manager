@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @GetMapping("")
     public String index(Model model) {
@@ -37,6 +39,7 @@ public class UserController {
             model.addAttribute("title", "Add User");
             return "users/add";
         }
+        newUser.setPwhash(encoder.encode(newUser.getPwhash()));
         userRepository.save(newUser);
         return "redirect:/users";
     }

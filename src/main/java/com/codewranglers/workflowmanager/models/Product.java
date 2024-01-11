@@ -69,8 +69,8 @@ public class Product {
 
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public Product(int productId) {
+        this.productId = productId;
     }
 
     public int getProductId() {
@@ -91,6 +91,14 @@ public class Product {
 
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public List<Operation> getOperationList() {
@@ -117,7 +125,5 @@ public class Product {
         this.partsList = partsList;
     }
 
-    public Image getImage() {
-        return image;
-    }
+
 }

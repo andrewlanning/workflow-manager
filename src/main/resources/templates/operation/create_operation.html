@@ -9,38 +9,25 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a th:href="@{/operation}">Back</a>
+            <a th:href="@{/product/operation/product_id/{productId}(productId=${productId})}" type="button" class="btn btn-light">Back</a>
         </li>
     </ul>
 </header>
 <section class="container">
-    <h1>Operation Creation Portal</h1>
-    <form th:action="@{/operation/add}" method="post" th:object="${operations}">
+    <h1 th:text = "${'Steps List for ' + productName}"></h1>
+    <form th:action="@{/product/operation/product_id/{productId}/add(productId=${productId})}" method="post" th:object="${operations}">
 
         <div class="form-group">
-            <label for="operationName">Operation Name:</label>
+            <label for="operationName">Step Name:</label>
             <input type="text" class="form-control" id="operationName" th:field="*{opName}" required>
         </div>
         <div class="form-group">
-            <label for="operationNumber">Operation Number:</label>
-            <input type="number" class="form-control" id="operationNumber" th:field="*{opNumber}" required>
-        </div>
-        <div class="form-group">
-            <label for="operationText">Operation Description:</label>
+            <label for="operationText">Step Description:</label>
             <textarea class="form-control" id="operationText" rows="3" th:field="*{opText}" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="productName">Select Product:</label>
-            <select class="form-select" th:field="*{product}" id="productName" required>
-                <option value="" selected>Please Select a Product</option>
-                <option th:each="product : ${products}"
-                        th:value="${product.productId}"
-                        th:text="${product.productName}"></option>
-            </select>
         </div>
         <br>
         <button type="submit" class="btn btn-primary">Create</button>
-        <a type="button" th:href="@{/operation}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/product/operation/product_id/{productId}(productId=${productId})}" class="btn btn-light">Cancel</a>
     </form>
 </section>
 

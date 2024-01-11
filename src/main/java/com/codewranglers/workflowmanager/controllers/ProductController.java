@@ -1,12 +1,16 @@
 package com.codewranglers.workflowmanager.controllers;
 
 import com.codewranglers.workflowmanager.models.Image;
+import com.codewranglers.workflowmanager.models.Operation;
 import com.codewranglers.workflowmanager.models.Product;
 import com.codewranglers.workflowmanager.models.data.ImageRepository;
+import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +25,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Controller
 @RequestMapping("/product")
@@ -30,13 +34,41 @@ public class ProductController {
 
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    OperationRepository operationRepository;
 
     @Autowired
     ImageRepository imageRepository;
 
     @GetMapping("")
     public String renderProductPortal(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+        // Using Map with key Product and Value total steps to show total steps on index page
+        Map<Product, Integer> finalMap = new LinkedHashMap<>();
+
+        int counter;
+        Iterable<Product> products = productRepository.findAll();
+
+        for (Product p : products) {
+            counter = 0;
+
+            List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+
+            if (!operations.isEmpty()) {
+
+                for (Operation o : operations) {
+
+                    if (o != null) {
+                        counter++;
+                    } else {
+                        counter = 0;
+                    }
+                }
+            }
+
+            finalMap.put(p, counter);
+        }
+
+        model.addAttribute("products", finalMap);
         return "/product/index";
     }
 
@@ -79,21 +111,27 @@ public class ProductController {
         }
     }
 
+    @Transactional
     @PostMapping("/edit/{productId}")
     public String processEditProductForm(@PathVariable int productId,
                                          @ModelAttribute @Valid Product editedProduct,
-                                         Errors errors, Model model) {
-
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Edit Product");
-            return "/product/edit";
-        }
+                                         Model model,
+                                         @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
 
         Optional<Product> productById = productRepository.findById(productId);
         if (productById.isPresent()) {
             Product product = productById.get();
             product.setProductName(editedProduct.getProductName());
             product.setProductDescription(editedProduct.getProductDescription());
+            if (productImage != null && !productImage.isEmpty()) {
+                if (product.getImage() != null) {
+                    imageRepository.delete(product.getImage());
+                }
+                String imageUrl = uploadImageAndGetUrl(productImage);
+                Image newImage = new Image(imageUrl);
+                product.setImage(newImage);
+                newImage.setProduct(product);
+            }
             productRepository.save(product);
         }
         return "redirect:/product";
@@ -103,6 +141,12 @@ public class ProductController {
     public String deleteProduct(@PathVariable int productId) {
         Optional<Product> optProduct = productRepository.findById(productId);
         if (optProduct.isPresent()) {
+            List<Operation> byproductProductId = operationRepository.findByproductProductId(productId);
+
+            if (!byproductProductId.isEmpty()) {
+                operationRepository.deleteAll(byproductProductId);
+            }
+
             productRepository.deleteById(productId);
         }
         return "redirect:/product";
@@ -140,6 +184,5 @@ public class ProductController {
         // Retrieve the image URL
         String imageUrl = rootNode.path("image").path("url").asText();
         return imageUrl;
-
     }
 }
