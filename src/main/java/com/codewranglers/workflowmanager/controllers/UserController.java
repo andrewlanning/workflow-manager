@@ -27,22 +27,6 @@ public class UserController {
         return "/admin/user_management/index";
     }
 
-    @GetMapping("add")
-    public String displayAddUserForm(Model model) {
-        model.addAttribute(new User());
-        return "users/add";
-    }
-
-    @PostMapping("add")
-    public String processAddUsersForm(@ModelAttribute @Valid User newUser, Errors errors, Model model) {
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Add User");
-            return "users/add";
-        }
-        newUser.setPwhash(encoder.encode(newUser.getPwhash()));
-        userRepository.save(newUser);
-        return "redirect:/users";
-    }
 
     @GetMapping("view/{userId}")
     public String displayViewUser(Model model, @PathVariable int userId) {
