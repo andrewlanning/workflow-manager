@@ -38,10 +38,6 @@ public class JobController {
     public String index(Model model) {
         Iterable<Job> allJobs = jobRepository.findAll();
 
-        for (Job j : allJobs){
-                j.setCurrentStep(Integer.parseInt(String.format("%03d", j.getCurrentStep())));
-        }
-        model.addAttribute("title", "All Jobs");
         model.addAttribute("jobs", allJobs);
         return "jobs/index";
     }
@@ -76,7 +72,6 @@ public class JobController {
             Job job = jobById.get();
             List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
             model.addAttribute("steps", byproductProductId);
-            model.addAttribute("title", "Edit Product");
             model.addAttribute("job", job);
             return "/jobs/job_edit_step";
         } else {
@@ -86,23 +81,63 @@ public class JobController {
 
     @PostMapping("/edit_step/job_id/{jobId}")
     public String processEditJobForm(@PathVariable int jobId,
-                                         @ModelAttribute Job editedJob,
-                                         Model model) {
+                                     @ModelAttribute Job editedJob,
+                                     Model model) {
         Optional<Job> jobById = jobRepository.findById(jobId);
-        if (jobById.isPresent()){
+        if (jobById.isPresent()) {
             Job job = jobById.get();
             job.setCurrentStep(editedJob.getCurrentStep());
+            jobRepository.save(job);
+        }
+
+        return "redirect:/jobs/edit/{jobId}";
+    }
+
+    @GetMapping("/edit/{jobId}")
+    public String displayEditProductForm(Model model, @PathVariable int jobId) {
+        Optional<Job> jobById = jobRepository.findById(jobId);
+        if (jobById.isPresent()) {
+            Job job = jobById.get();
+            if (Boolean.TRUE.equals(job.getIsCompleted())) {
+                return "redirect:/jobs";
+            } else {
+                model.addAttribute("job", job);
+                model.addAttribute("dueDate", job.getDueDate());
+                model.addAttribute("isCompleted", job.getIsCompleted());
+                return "/jobs/job_edit";
+            }
+        } else {
+            return "redirect:/jobs/edit";
+        }
+    }
+
+    @PostMapping("/edit/{jobId}")
+    public String processEditProductForm(@PathVariable int jobId,
+                                         @ModelAttribute @Valid Job editedJob) {
+
+        Optional<Job> jobById = jobRepository.findById(jobId);
+
+        if (jobById.isPresent()) {
+            Job job = jobById.get();
+            job.setDueDate(editedJob.getDueDate());
+
+            if (Boolean.FALSE.equals(job.getIsCompleted())) {
+                if (Boolean.TRUE.equals(editedJob.getIsCompleted())) {
+                    job.setIsCompleted(Boolean.TRUE);
+                    job.setCompletionDate(LocalDate.now());
+                }
+            }
             jobRepository.save(job);
         }
 
         return "redirect:/jobs";
     }
 
-    private String createWONumber(){
+    private String createWONumber() {
         Iterable<Job> jobs = jobRepository.findAll();
         int woNumber = 0;
 
-        for (Job j : jobs){
+        for (Job j : jobs) {
             woNumber = Integer.parseInt(j.getWorkOrderNumber().substring(2));
         }
         woNumber++;
@@ -110,13 +145,13 @@ public class JobController {
         return "WO" + String.format(String.format("%04d", woNumber));
     }
 
-    private Lot createLotNumber(int productId){
+    private Lot createLotNumber(int productId) {
         Optional<Product> byId = productRepository.findById(productId);
         Iterable<Lot> lots = lotRepository.findAll();
         Lot lot = new Lot();
         int lotNumber = 0;
 
-        for (Lot l : lots){
+        for (Lot l : lots) {
             lotNumber = Integer.parseInt(l.getLotNumber());
         }
 

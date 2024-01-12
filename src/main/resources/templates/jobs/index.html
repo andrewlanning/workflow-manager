@@ -34,25 +34,15 @@
         </thead>
         <tbody>
         <tr class="text-center" th:each="job : ${jobs}">
-            <td th:text="${job.workOrderNumber}"></td>
+            <td> <a th:href="@{/jobs/edit/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
             <td th:text="${job.product.productName}"></td>
             <td th:text="${job.quantity}"></td>
             <td th:text="${job.lot.lotNumber}"></td>
             <td th:text="${job.currentStep}"></td>
-            <td th:text="${job.isCompleted}"></td>
+            <td>  <input type="checkbox" th:checked="${job.isCompleted} ? 'checked'" onclick="return false;"></td>
             <td th:text="${job.startDate}"></td>
             <td th:text="${job.dueDate}"></td>
             <td th:text="${job.completionDate}"></td>
-            <td>
-                <a th:href="@{/jobs/edit_step/job_id/{jobId}(jobId=${job.jobId})}" type="button" class="btn btn-primary">Edit Step</a>
-            </td>
-<!--            <td>-->
-<!--                <a th:href="@{/product/edit/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Edit Product</a>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--                <a th:href="@{/product/delete/{productId}(productId=${product.key.productId})}"-->
-<!--                   onclick="return confirm('Are you sure you want to Delete this Product?')" type="button" class="btn btn-danger">Delete</a>-->
-<!--            </td>-->
         </tr>
         </tbody>
     </table>
