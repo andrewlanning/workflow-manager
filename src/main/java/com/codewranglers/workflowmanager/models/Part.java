@@ -3,12 +3,14 @@ package com.codewranglers.workflowmanager.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "part")
 public class Part {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer partId;
 
+    @Column(name = "ser_num")
     private String serNum;
 
     @ManyToOne
@@ -23,10 +25,15 @@ public class Part {
     @JoinColumn(name = "job_id")
     private Job job;
 
-    public Part(String serNum, Product product, Lot lot) {
+    public Part(String serNum, Lot lot, Product product, Job job) {
         this.serNum = serNum;
-        this.product = product;
         this.lot = lot;
+        this.product = product;
+        this.job = job;
+    }
+
+    public Part() {
+
     }
 
     public int getPartId() {

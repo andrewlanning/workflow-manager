@@ -2,10 +2,7 @@ package com.codewranglers.workflowmanager.controllers;
 
 
 import com.codewranglers.workflowmanager.models.*;
-import com.codewranglers.workflowmanager.models.data.JobRepository;
-import com.codewranglers.workflowmanager.models.data.LotRepository;
-import com.codewranglers.workflowmanager.models.data.OperationRepository;
-import com.codewranglers.workflowmanager.models.data.ProductRepository;
+import com.codewranglers.workflowmanager.models.data.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller
@@ -33,12 +29,20 @@ public class JobController {
     private LotRepository lotRepository;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private PartRepository partRepository;
 
     @GetMapping("")
     public String index(Model model) {
         Iterable<Job> allJobs = jobRepository.findAll();
+        List<Job> sortedJobs = new ArrayList<>();
 
-        model.addAttribute("jobs", allJobs);
+        for (Job j : allJobs){
+            sortedJobs.add(j);
+        }
+        Collections.reverse(sortedJobs);
+
+        model.addAttribute("jobs", sortedJobs);
         return "jobs/index";
     }
 
@@ -61,7 +65,10 @@ public class JobController {
         newJob.setCurrentStep(Integer.parseInt(String.format("%03d", 0)));
         newJob.setIsCompleted(Boolean.FALSE);
         newJob.setStartDate(LocalDate.now());
-        jobRepository.save(newJob);
+
+        Job job = jobRepository.save(newJob);
+
+        createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), lot, job);
         return "redirect:/jobs";
     }
 
@@ -164,6 +171,32 @@ public class JobController {
 
         return lot;
     }
-}
 
+    private void createParts(int productId, int quantity, Lot lot, Job job) {
+        List<Part> byproductProductId = partRepository.findByproductProductId(productId);
+        String productName = productRepository.findById(productId).orElse(null).getProductName();
+        Part part = new Part();
+        List<Part> totalParts = new ArrayList<>();
+        part.setProduct(new Product(productId));
+        if (byproductProductId.isEmpty()) {
+            for (int i = 1; i < quantity + 1; i++) {
+                part.setLot(lot);
+                part.setSerNum("SN" + productId + "-" + productName.substring(0, 3).toUpperCase() + String.format("%03d", i));
+                totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
+            }
+        } else {
+            int serNum = 0;
+            for (Part p : byproductProductId) {
+                serNum = Integer.parseInt(p.getSerNum().substring(8));
+                p.setLot(lot);
+            }
+            for (int i = 1; i < quantity + 1; i++) {
+                serNum++;
+                part.setSerNum("SN" + part.getProduct().getProductId() + "-" + productName.substring(0, 3).toUpperCase() + String.format("%03d", serNum));
+                totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
+            }
+        }
+        partRepository.saveAll(totalParts);
+    }
+}
 
