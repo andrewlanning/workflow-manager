@@ -1,10 +1,7 @@
 package com.codewranglers.workflowmanager.controllers;
 
 
-import com.codewranglers.workflowmanager.models.Image;
-import com.codewranglers.workflowmanager.models.Job;
-import com.codewranglers.workflowmanager.models.Lot;
-import com.codewranglers.workflowmanager.models.Product;
+import com.codewranglers.workflowmanager.models.*;
 import com.codewranglers.workflowmanager.models.data.JobRepository;
 import com.codewranglers.workflowmanager.models.data.LotRepository;
 import com.codewranglers.workflowmanager.models.data.OperationRepository;
@@ -20,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -72,43 +70,32 @@ public class JobController {
     }
 
     @GetMapping("/edit_step/job_id/{jobId}")
-    public String displayEditProductForm(Model model, @PathVariable int jobId) {
+    public String displayEditJobForm(Model model, @PathVariable int jobId) {
         Optional<Job> jobById = jobRepository.findById(jobId);
         if (jobById.isPresent()) {
             Job job = jobById.get();
-            model.addAttribute("steps", operationRepository.findAll());
+            List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
+            model.addAttribute("steps", byproductProductId);
             model.addAttribute("title", "Edit Product");
             model.addAttribute("job", job);
-            model.addAttribute("stepValue", job.getCurrentStep());
             return "/jobs/job_edit_step";
         } else {
             return "/jobs/edit_step/job_id/{jobId}";
         }
     }
 
-    @PostMapping("/jobs/edit_step/job_id/{jobId}")
-    public String processEditProductForm(@PathVariable int jobId,
-                                         @ModelAttribute @Valid Product editedProduct,
-                                         Model model,
-                                         @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
+    @PostMapping("/edit_step/job_id/{jobId}")
+    public String processEditJobForm(@PathVariable int jobId,
+                                         @ModelAttribute Job editedJob,
+                                         Model model) {
+        Optional<Job> jobById = jobRepository.findById(jobId);
+        if (jobById.isPresent()){
+            Job job = jobById.get();
+            job.setCurrentStep(editedJob.getCurrentStep());
+            jobRepository.save(job);
+        }
 
-//        Optional<Product> productById = productRepository.findById(productId);
-//        if (productById.isPresent()) {
-//            Product product = productById.get();
-//            product.setProductName(editedProduct.getProductName());
-//            product.setProductDescription(editedProduct.getProductDescription());
-//            if (productImage != null && !productImage.isEmpty()) {
-//                if (product.getImage() != null) {
-//                    imageRepository.delete(product.getImage());
-//                }
-//                String imageUrl = uploadImageAndGetUrl(productImage);
-//                Image newImage = new Image(imageUrl);
-//                product.setImage(newImage);
-//                newImage.setProduct(product);
-//            }
-//            productRepository.save(product);
-//        }
-        return "redirect:/product";
+        return "redirect:/jobs";
     }
 
     private String createWONumber(){

@@ -16,10 +16,10 @@
 </header>
 <section class="container">
     <h1>Job Creation Portal</h1>
-    <form th:action="@{/jobs/add}" method="post" th:object="${job}">
+    <form th:action="@{/jobs/edit_step/job_id/{jobId}(jobId=${job.jobId})}" method="post" th:object="${job}">
         <div class="form-group">
             <label for="productName">Product Name:</label>
-            <input type="text" class="form-control" name="productName" th:value="${job.product.productName}" readonly>
+            <input type="text" class="form-control" id="productName" name="productName" th:value="${job.product.productName}" readonly>
         </div>
         <br>
         <div class="form-group">
@@ -30,10 +30,8 @@
         <div class="form-group">
             <label for="step">Select Step:</label>
             <select class="form-select" th:field="*{currentStep}" id="step" required>
-                <option th:value="${stepValue}"
-                        th:text="${stepValue}" selected></option>
                 <option th:each="step : ${steps}"
-                        th:value="${step.operationId}"
+                        th:value="${step.opNumber}"
                         th:text="${step.opName}"></option>
             </select>
         </div>
