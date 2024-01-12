@@ -7,6 +7,7 @@ import com.codewranglers.workflowmanager.models.Lot;
 import com.codewranglers.workflowmanager.models.Product;
 import com.codewranglers.workflowmanager.models.data.JobRepository;
 import com.codewranglers.workflowmanager.models.data.LotRepository;
+import com.codewranglers.workflowmanager.models.data.OperationRepository;
 import com.codewranglers.workflowmanager.models.data.ProductRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -32,6 +33,8 @@ public class JobController {
     private ProductRepository productRepository;
     @Autowired
     private LotRepository lotRepository;
+    @Autowired
+    private OperationRepository operationRepository;
 
     @GetMapping("")
     public String index(Model model) {
@@ -68,14 +71,16 @@ public class JobController {
         return "redirect:/jobs";
     }
 
-    @GetMapping("/jobs/edit_step/job_id/{jobId}")
+    @GetMapping("/edit_step/job_id/{jobId}")
     public String displayEditProductForm(Model model, @PathVariable int jobId) {
         Optional<Job> jobById = jobRepository.findById(jobId);
         if (jobById.isPresent()) {
             Job job = jobById.get();
+            model.addAttribute("steps", operationRepository.findAll());
             model.addAttribute("title", "Edit Product");
             model.addAttribute("job", job);
-            return "/product/edit";
+            model.addAttribute("stepValue", job.getCurrentStep());
+            return "/jobs/job_edit_step";
         } else {
             return "/jobs/edit_step/job_id/{jobId}";
         }
@@ -87,22 +92,22 @@ public class JobController {
                                          Model model,
                                          @RequestParam(value = "productImage", required = false) MultipartFile productImage) throws IOException {
 
-        Optional<Product> productById = productRepository.findById(productId);
-        if (productById.isPresent()) {
-            Product product = productById.get();
-            product.setProductName(editedProduct.getProductName());
-            product.setProductDescription(editedProduct.getProductDescription());
-            if (productImage != null && !productImage.isEmpty()) {
-                if (product.getImage() != null) {
-                    imageRepository.delete(product.getImage());
-                }
-                String imageUrl = uploadImageAndGetUrl(productImage);
-                Image newImage = new Image(imageUrl);
-                product.setImage(newImage);
-                newImage.setProduct(product);
-            }
-            productRepository.save(product);
-        }
+//        Optional<Product> productById = productRepository.findById(productId);
+//        if (productById.isPresent()) {
+//            Product product = productById.get();
+//            product.setProductName(editedProduct.getProductName());
+//            product.setProductDescription(editedProduct.getProductDescription());
+//            if (productImage != null && !productImage.isEmpty()) {
+//                if (product.getImage() != null) {
+//                    imageRepository.delete(product.getImage());
+//                }
+//                String imageUrl = uploadImageAndGetUrl(productImage);
+//                Image newImage = new Image(imageUrl);
+//                product.setImage(newImage);
+//                newImage.setProduct(product);
+//            }
+//            productRepository.save(product);
+//        }
         return "redirect:/product";
     }
 
