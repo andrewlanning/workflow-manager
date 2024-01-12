@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -45,6 +46,7 @@ public class OperationController {
 
     @PostMapping("/product_id/{productId}/add")
     public String processOperationCreation(@ModelAttribute("operations") Operation operation) {
+        operation.setOpNumber(createOPNumber(productId));
         operation.setProduct(new Product(productId));
         operationRepository.save(operation);
         return "redirect:/product/operation/product_id/{productId}";
@@ -98,5 +100,22 @@ public class OperationController {
             operationRepository.deleteById(operationId);
         }
         return "redirect:/product/operation/product_id/{productId}";
+    }
+
+    private int createOPNumber(int productId){
+        List<Operation> byproductProductId = operationRepository.findByproductProductId(productId);
+         int opNumber = 0;
+
+         if (byproductProductId != null) {
+             for (Operation o : byproductProductId) {
+                 opNumber = o.getOpNumber();
+             }
+             opNumber++;
+         } else {
+             opNumber = 1;
+         }
+
+         return opNumber;
+
     }
 }
