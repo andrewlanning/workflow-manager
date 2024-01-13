@@ -10,33 +10,47 @@
 <div th:replace="~{fragments :: page-header}"></div>
 <div class="container-md" id="page">
     <h1>User Creation Portal</h1>
-    <form th:action="@{/users/add}" method="post" th:object="${user}" style="margin-top:1rem;">
+    <form th:action="@{/admin/user_management/create_user}" method="post" th:object="${createUserDTO}" style="margin-top:1rem;">
         <div class="form-group">
             <label for="firstName">First Name:</label><br>
             <input type="text" id="firstName" class="form-control" placeholder="First Name" aria-label="First Name"
-                   aria-describedby="basic-addon1" th:field="*{firstname}" required>
+                   aria-describedby="basic-addon1" th:field="*{firstName}" required>
+            <p class="error" th:errors="${createUserDTO.firstName}" style="color:red;"></p>
         </div>
         <div class="form-group">
-            <label for="firstName">Last Name:</label><br>
-            <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name"
-                   aria-describedby="basic-addon1" th:field="*{lastname}" required>
+            <label for="lastName">Last Name:</label><br>
+            <input type="text" id="lastName" class="form-control" placeholder="Last Name" aria-label="Last Name"
+                   aria-describedby="basic-addon1" th:field="*{lastName}" required>
+            <p class="error" th:errors="${createUserDTO.lastName}" style="color:red;"></p>
         </div>
 
         <div class="form-group">
-            <label for="firstName">Username:</label><br>
-            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" class="form-control" placeholder="Username" aria-label="Username"
                    aria-describedby="basic-addon1" th:field="*{username}" required>
+            <p class="error" th:errors="${createUserDTO.username}" style="color:red;"></p>
         </div>
 
         <div class="form-group">
-            <label for="firstName">Password:</label><br>
-            <input type="text" class="form-control" placeholder="Password" aria-label="Last Name"
-                   aria-describedby="basic-addon1" th:field="*{pwhash}" required>
-        </div>
-        <div class="form-group">
-            <label for="firstName">Email:</label><br>
-            <input type="email" class="form-control" placeholder="Email" aria-label="Email"
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" class="form-control" placeholder="Email" aria-label="Email"
                    aria-describedby="basic-addon1" th:field="*{email}" required>
+            <p class="error" th:errors="${createUserDTO.email}" style="color:red;"></p>
+        </div>
+
+
+        <div class="form-group">
+            <label for="password">Password:</label><br>
+            <input type="text" id="password" class="form-control" placeholder="Password" aria-label="Password"
+                   aria-describedby="basic-addon1" th:field="*{password}" required>
+            <p class="error" th:errors="${createUserDTO.password}" style="color:red;"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password:</label><br>
+            <input type="text" id="confirmPassword" class="form-control" placeholder="Confirm Password" aria-label="Confirm Password"
+                   aria-describedby="basic-addon1" th:field="*{confirmPassword}" required>
+            <p class="error" th:errors="${createUserDTO.confirmPassword}" style="color:red;"></p>
         </div>
 
         <div class="form-group">
@@ -48,7 +62,7 @@
             </select>
         </div>
         <br>
-        <button class="btn btn-primary" type="submit">Create</button>
+        <button type="submit" class="btn btn-primary">Create</button>
         <a type="button" th:href="@{/admin/user_management}" class="btn btn-light">Cancel</a>
     </form>
 </div>

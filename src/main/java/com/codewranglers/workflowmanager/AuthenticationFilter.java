@@ -28,6 +28,19 @@ public class AuthenticationFilter implements HandlerInterceptor {
         return false;
     }
 
+    private static boolean isAdminWhitelisted(String path) {
+        return path.startsWith("/admin");
+    }
+
+    private static boolean isManagerWhitelisted(String path) {
+        return path.startsWith("/manager");
+    }
+
+    private static boolean isMemberWhitelisted(String path) {
+        return path.startsWith("/member");
+    }
+
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 

@@ -1,9 +1,14 @@
 package com.codewranglers.workflowmanager.models;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 
 
 /*
@@ -42,11 +47,13 @@ public class User {
     public User() {
     }
 
-    public User(String password, String firstname, String lastname, Integer role) {
+    public User(String firstname, String lastname, String username, String email, String password, Integer role) {
         this.pwhash = encoder.encode(password);
         this.firstname = firstname;
         this.lastname = lastname;
         this.role = role;
+        this.email = email;
+        this.username = username;
     }
 
 
@@ -86,14 +93,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPwhash() {
-        return pwhash;
-    }
-
-    public void setPwhash(String pwhash) {
-        this.pwhash = pwhash;
     }
 
     public void setEmail(String email) {

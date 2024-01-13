@@ -11,6 +11,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String renderTestPortal() {
-        return "index";
+        return "redirect:/login";
     }
 }
