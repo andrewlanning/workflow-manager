@@ -62,13 +62,12 @@ public class JobController {
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
         newJob.setLot(lot);
-        newJob.setCurrentStep(Integer.parseInt(String.format("%03d", 0)));
         newJob.setIsCompleted(Boolean.FALSE);
         newJob.setStartDate(LocalDate.now());
 
         Job job = jobRepository.save(newJob);
 
-        createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), lot, job);
+        createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), newJob.getLot(), job);
         return "redirect:/jobs";
     }
 
@@ -175,25 +174,27 @@ public class JobController {
     private void createParts(int productId, int quantity, Lot lot, Job job) {
         List<Part> byproductProductId = partRepository.findByproductProductId(productId);
         String productName = productRepository.findById(productId).orElse(null).getProductName();
+
         Part part = new Part();
         List<Part> totalParts = new ArrayList<>();
+
         part.setProduct(new Product(productId));
+
         if (byproductProductId.isEmpty()) {
             for (int i = 1; i < quantity + 1; i++) {
-                part.setLot(lot);
-                part.setSerNum("SN" + productId + "-" + productName.substring(0, 3).toUpperCase() + String.format("%03d", i));
+                part.setSerNum("SN" + "-" + String.format("%03d", i));
+                part.setJob(job);
                 totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
             }
         } else {
             int serNum = 0;
             for (Part p : byproductProductId) {
-                serNum = Integer.parseInt(p.getSerNum().substring(8));
-                p.setLot(lot);
+                serNum = Integer.parseInt(p.getSerNum().substring(3));
             }
             for (int i = 1; i < quantity + 1; i++) {
                 serNum++;
-                part.setSerNum("SN" + part.getProduct().getProductId() + "-" + productName.substring(0, 3).toUpperCase() + String.format("%03d", serNum));
-                totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
+                part.setSerNum("SN" + "-" + String.format("%03d", serNum));
+                totalParts.add(new Part(part.getSerNum(),  lot, part.getProduct(), job));
             }
         }
         partRepository.saveAll(totalParts);
