@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -46,24 +47,21 @@ public class Job {
     @JoinColumn(name = "lot_id")
     private Lot lot; // Automatically generated upon object creation
 
-    @OneToMany(mappedBy = "job")
-    private List<Part> partsList;
+    @Column(name = "is_complete")
+    private Boolean isCompleted; // When process is exhausted: True
 
-    @Column(name = "is_completed")
-    private Boolean isComplete; // When process is exhausted: True
-
-    @Column(name = "start_date")
     @CreatedDate
-    private Date startDate; // java.util.date : format MM-DD-YYYY
+    @Column(name = "start_date")
+    private LocalDate startDate; // java.util.date : format MM-DD-YYYY
 
     @Column(name = "due_date")
-    private Date dueDate;
+    private LocalDate dueDate;
 
     @Column(name = "completion_date")
     @Nullable
-    private Date completionDate;
+    private LocalDate completionDate;
 
-    public Job(Product product, int quantity, Date startDate, Date dueDate, Date completionDate) {
+    public Job(Product product, int quantity, LocalDate startDate, LocalDate dueDate, LocalDate completionDate) {
         this.product = product;
         this.quantity = quantity;
         this.startDate = startDate;
@@ -102,44 +100,53 @@ public class Job {
         this.lot = lot;
     }
 
-    public List<Part> getPartsList() {
-        return partsList;
+    public Boolean getIsCompleted() {
+        return isCompleted;
     }
 
-    public void setPartsList(List<Part> partsList) {
-        this.partsList = partsList;
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
     }
 
-    public Boolean getComplete() {
-        return isComplete;
-    }
-
-    public void setComplete(Boolean complete) {
-        isComplete = complete;
-    }
-
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getCompletionDate() {
+    public LocalDate getCompletionDate() {
         return completionDate;
     }
 
-    public void setCompletionDate(Date completaionDate) {
+    public void setCompletionDate(LocalDate completaionDate) {
         this.completionDate = completaionDate;
     }
+
+    public String getWorkOrderNumber() {
+        return workOrderNumber;
+    }
+
+    public void setWorkOrderNumber(String workOrderNumber) {
+        this.workOrderNumber = workOrderNumber;
+    }
+
+    public int getCurrentStep() {
+        return currentStep;
+    }
+
+    public void setCurrentStep(int currentStep) {
+        this.currentStep = currentStep;
+    }
+
 }
 

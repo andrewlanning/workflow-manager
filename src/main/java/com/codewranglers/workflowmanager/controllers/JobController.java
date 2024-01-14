@@ -1,93 +1,203 @@
 package com.codewranglers.workflowmanager.controllers;
 
-import com.codewranglers.workflowmanager.models.Job;
-import com.codewranglers.workflowmanager.models.data.JobRepository;
+
+import com.codewranglers.workflowmanager.models.*;
+import com.codewranglers.workflowmanager.models.data.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
+
 
 @Controller
-@RequestMapping("jobs")
+@RequestMapping("/jobs")
 public class JobController {
 
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private LotRepository lotRepository;
+    @Autowired
+    private OperationRepository operationRepository;
+    @Autowired
+    private PartRepository partRepository;
 
     @GetMapping("")
     public String index(Model model) {
-        model.addAttribute("title", "All Jobs");
-        model.addAttribute("jobs", jobRepository.findAll());
+        Iterable<Job> allJobs = jobRepository.findAll();
+        List<Job> sortedJobs = new ArrayList<>();
+
+        for (Job j : allJobs){
+            sortedJobs.add(j);
+        }
+        Collections.reverse(sortedJobs);
+
+        model.addAttribute("jobs", sortedJobs);
         return "jobs/index";
     }
 
-    @GetMapping("add")
+    @GetMapping("/add")
     public String displayAddJobForm(Model model) {
+        model.addAttribute("products", productRepository.findAll());
         model.addAttribute(new Job());
-        return "jobs/add";
+        return "jobs/job_add";
     }
 
-    @PostMapping("add")
-    public String processAddJobsForm(@ModelAttribute @Valid Job newJob, Errors errors, Model model) {
+    @PostMapping("/add")
+    public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
-            return "jobs/add";
+            return "jobs/job_add";
         }
-        jobRepository.save(newJob);
+        newJob.setWorkOrderNumber(createWONumber());
+        Lot lot = createLotNumber(newJob.getProduct().getProductId());
+        newJob.setLot(lot);
+        newJob.setIsCompleted(Boolean.FALSE);
+        newJob.setStartDate(LocalDate.now());
+
+        Job job = jobRepository.save(newJob);
+
+        createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), newJob.getLot(), job);
         return "redirect:/jobs";
     }
 
-    @GetMapping("view/{jobId}")
-    public String displayViewJob(Model model, @PathVariable int jobId) {
-        Optional<Job> optJob = jobRepository.findById(jobId);
-        if (optJob.isPresent()) {
-            Job job = optJob.get();
-            model.addAttribute("job", job);
-            return "jobs/view";
-        } else {
-            return "redirect:/jobs";
-        }
-    }
-    @GetMapping("edit/{jobId}")
+    @GetMapping("/edit_step/job_id/{jobId}")
     public String displayEditJobForm(Model model, @PathVariable int jobId) {
-        Optional<Job> optJob = jobRepository.findById(jobId);
-        if (optJob.isPresent()) {
-            Job job = optJob.get();
-            model.addAttribute("title", "Edit Job");
+        Optional<Job> jobById = jobRepository.findById(jobId);
+        if (jobById.isPresent()) {
+            Job job = jobById.get();
+            List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
+            model.addAttribute("steps", byproductProductId);
             model.addAttribute("job", job);
-            return "jobs/edit";
+            return "/jobs/job_edit_step";
         } else {
-            return "redirect:/jobs";
+            return "/jobs/edit_step/job_id/{jobId}";
         }
     }
 
-    @PostMapping("edit/{jobId}")
+    @PostMapping("/edit_step/job_id/{jobId}")
     public String processEditJobForm(@PathVariable int jobId,
-                                       @ModelAttribute @Valid Job editedJob,
-                                       Errors errors, Model model) {
-
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Edit Job");
-            return "jobs/edit";
+                                     @ModelAttribute Job editedJob,
+                                     Model model) {
+        Optional<Job> jobById = jobRepository.findById(jobId);
+        if (jobById.isPresent()) {
+            Job job = jobById.get();
+            job.setCurrentStep(editedJob.getCurrentStep());
+            jobRepository.save(job);
         }
 
-        Optional<Job> optJob = jobRepository.findById(jobId);
-        if (optJob.isPresent()) {
-            Job job = optJob.get();
-//            job.setName(editedJob.getName());
+        return "redirect:/jobs/edit/{jobId}";
+    }
+
+    @GetMapping("/edit/{jobId}")
+    public String displayEditProductForm(Model model, @PathVariable int jobId) {
+        Optional<Job> jobById = jobRepository.findById(jobId);
+        if (jobById.isPresent()) {
+            Job job = jobById.get();
+            if (Boolean.TRUE.equals(job.getIsCompleted())) {
+                return "redirect:/jobs";
+            } else {
+                model.addAttribute("job", job);
+                model.addAttribute("dueDate", job.getDueDate());
+                model.addAttribute("isCompleted", job.getIsCompleted());
+                return "/jobs/job_edit";
+            }
+        } else {
+            return "redirect:/jobs/edit";
+        }
+    }
+
+    @PostMapping("/edit/{jobId}")
+    public String processEditProductForm(@PathVariable int jobId,
+                                         @ModelAttribute @Valid Job editedJob) {
+
+        Optional<Job> jobById = jobRepository.findById(jobId);
+
+        if (jobById.isPresent()) {
+            Job job = jobById.get();
+            job.setDueDate(editedJob.getDueDate());
+
+            if (Boolean.FALSE.equals(job.getIsCompleted())) {
+                if (Boolean.TRUE.equals(editedJob.getIsCompleted())) {
+                    job.setIsCompleted(Boolean.TRUE);
+                    job.setCompletionDate(LocalDate.now());
+                }
+            }
             jobRepository.save(job);
         }
 
         return "redirect:/jobs";
     }
 
-    @GetMapping("delete/{jobId}")
-    public String deleteJob(@PathVariable int jobId) {
-        jobRepository.deleteById(jobId);
-        return "redirect:/jobs";
+    private String createWONumber() {
+        Iterable<Job> jobs = jobRepository.findAll();
+        int woNumber = 0;
+
+        for (Job j : jobs) {
+            woNumber = Integer.parseInt(j.getWorkOrderNumber().substring(2));
+        }
+        woNumber++;
+
+        return "WO" + String.format(String.format("%04d", woNumber));
+    }
+
+    private Lot createLotNumber(int productId) {
+        Optional<Product> byId = productRepository.findById(productId);
+        Iterable<Lot> lots = lotRepository.findAll();
+        Lot lot = new Lot();
+        int lotNumber = 0;
+
+        for (Lot l : lots) {
+            lotNumber = Integer.parseInt(l.getLotNumber());
+        }
+
+        lotNumber++;
+
+        lot.setLotNumber(String.format("%04d", lotNumber));
+        lot.setProduct(byId.orElse(null));
+
+        lotRepository.save(lot);
+
+        return lot;
+    }
+
+    private void createParts(int productId, int quantity, Lot lot, Job job) {
+        List<Part> byproductProductId = partRepository.findByproductProductId(productId);
+        String productName = productRepository.findById(productId).orElse(null).getProductName();
+
+        Part part = new Part();
+        List<Part> totalParts = new ArrayList<>();
+
+        part.setProduct(new Product(productId));
+
+        if (byproductProductId.isEmpty()) {
+            for (int i = 1; i < quantity + 1; i++) {
+                part.setSerNum("SN" + "-" + String.format("%03d", i));
+                part.setJob(job);
+                totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
+            }
+        } else {
+            int serNum = 0;
+            for (Part p : byproductProductId) {
+                serNum = Integer.parseInt(p.getSerNum().substring(3));
+            }
+            for (int i = 1; i < quantity + 1; i++) {
+                serNum++;
+                part.setSerNum("SN" + "-" + String.format("%03d", serNum));
+                totalParts.add(new Part(part.getSerNum(),  lot, part.getProduct(), job));
+            }
+        }
+        partRepository.saveAll(totalParts);
     }
 }
+

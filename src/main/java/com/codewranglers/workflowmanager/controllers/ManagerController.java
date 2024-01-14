@@ -50,19 +50,10 @@ public class ManagerController {
         return "/manager/index";
     }
 
-    @GetMapping("/job")
-    public String renderJobsPortal(Model model) {
-        // Logic for displaying Jobs page
-        return "/manager/job/index";
-    }
-
     @GetMapping("/view-workforce")
     public String renderWorkforceTable (Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "/manager/view-workforce";
     }
-
-
-
 
 }

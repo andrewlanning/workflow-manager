@@ -33,6 +33,10 @@ public class Lot {
 
     }
 
+    public Lot(int lotId) {
+        this.lotId = lotId;
+    }
+
     public int getLotId() {
         return lotId;
     }
