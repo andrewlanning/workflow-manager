@@ -16,7 +16,7 @@
 </header>
 <div class="container">
     <h1>Edit Product</h1>
-    <form th:action="@{/product/edit/{productId}(productId=${product.productId})}" method="post"
+    <form th:action="@{/manager/product/edit/{productId}(productId=${product.productId})}" method="post"
           th:object="${product}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="productName">Product Name</label>
@@ -44,7 +44,7 @@
 
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a type="button" th:href="@{/product}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/manager/product}" class="btn btn-light">Cancel</a>
     </form>
 </div>
 

@@ -18,7 +18,7 @@ import java.util.*;
 
 
 @Controller
-@RequestMapping("/jobs")
+@RequestMapping("/manager/jobs")
 public class JobController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class JobController {
     public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
-            return "jobs/job_add";
+            return "/jobs/job_add";
         }
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
@@ -68,7 +68,7 @@ public class JobController {
         Job job = jobRepository.save(newJob);
 
         createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), newJob.getLot(), job);
-        return "redirect:/jobs";
+        return "redirect:/manager/jobs";
     }
 
     @GetMapping("/edit_step/job_id/{jobId}")
@@ -96,7 +96,7 @@ public class JobController {
             jobRepository.save(job);
         }
 
-        return "redirect:/jobs/edit/{jobId}";
+        return "redirect:/manager/jobs/edit/{jobId}";
     }
 
     @GetMapping("/edit/{jobId}")
@@ -105,7 +105,7 @@ public class JobController {
         if (jobById.isPresent()) {
             Job job = jobById.get();
             if (Boolean.TRUE.equals(job.getIsCompleted())) {
-                return "redirect:/jobs";
+                return "redirect:/manager/jobs";
             } else {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
@@ -113,7 +113,7 @@ public class JobController {
                 return "/jobs/job_edit";
             }
         } else {
-            return "redirect:/jobs/edit";
+            return "/redirect:/manager/jobs/edit";
         }
     }
 
@@ -136,7 +136,7 @@ public class JobController {
             jobRepository.save(job);
         }
 
-        return "redirect:/jobs";
+        return "redirect:/manager/jobs";
     }
 
     private String createWONumber() {

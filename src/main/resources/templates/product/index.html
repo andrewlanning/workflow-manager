@@ -17,7 +17,7 @@
 </header>
 <section id="page" class="container-md">
     <h1>Product List</h1>
-    <a th:href="@{/product/add}" class="btn btn-primary create">Create New Product</a>
+    <a th:href="@{/manager/product/add}" class="btn btn-primary create">Create New Product</a>
     <table class="table table-striped table-content table-dark">
         <thead>
         <tr class="text-center">
@@ -35,13 +35,13 @@
                 <img th:if="${product.key.image != null and product.key.image.url != null}" th:src="${product.key.image.url}" style="width:100px;">
             </td>
             <td>
-                <a th:href="@{/product/operation/product_id/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Manage Steps</a>
+                <a th:href="@{/manager/product/operation/product_id/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Manage Steps</a>
             </td>
             <td>
-                <a th:href="@{/product/edit/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Edit Product</a>
+                <a th:href="@{/manager/product/edit/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Edit Product</a>
             </td>
             <td>
-                <a th:href="@{/product/delete/{productId}(productId=${product.key.productId})}"
+                <a th:href="@{/manager/product/delete/{productId}(productId=${product.key.productId})}"
                    onclick="return confirm('Are you sure you want to Delete this Product?')" type="button" class="btn btn-danger">Delete</a>
             </td>
         </tr>

@@ -15,7 +15,7 @@
 </header>
 <div class="container">
     <h1 th:text="${'Edit Step for ' + productName}">Edit Operation</h1>
-    <form th:action="@{/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" method="post" th:object="${operation}">
+    <form th:action="@{/manager/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" method="post" th:object="${operation}">
 
         <div class="form-group">
             <label for="operationName">Step Name:</label>
@@ -27,7 +27,7 @@
         </div>
         <br>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a type="button" th:href="@{/product/operation/product_id/{productId}(productId=${productId})}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/manager/product/operation/product_id/{productId}(productId=${productId})}" class="btn btn-light">Cancel</a>
     </form>
 </div>
 

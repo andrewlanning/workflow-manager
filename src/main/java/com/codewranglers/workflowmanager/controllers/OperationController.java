@@ -16,7 +16,7 @@ import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/product/operation")
+@RequestMapping("/manager/product/operation")
 public class OperationController {
 
     @Autowired
@@ -49,7 +49,7 @@ public class OperationController {
         operation.setOpNumber(createOPNumber(productId));
         operation.setProduct(new Product(productId));
         operationRepository.save(operation);
-        return "redirect:/product/operation/product_id/{productId}";
+        return "redirect:/manager/product/operation/product_id/{productId}";
     }
 
 
@@ -66,7 +66,7 @@ public class OperationController {
             model.addAttribute("products", productRepository.findAll());
             return "/operation/edit";
         } else {
-            return "redirect:/product/operation/product_id/{productId}";
+            return "redirect:/manager/product/operation/product_id/{productId}";
         }
     }
 
@@ -89,7 +89,7 @@ public class OperationController {
             operation.setOpText(editedOperation.getOpText());
             operationRepository.save(operation);
         }
-        return "redirect:/product/operation/product_id/{productId}";
+        return "redirect:/manager/product/operation/product_id/{productId}";
     }
 
     @GetMapping("product_id/{productId}/delete/operation_id/{operationId}")
@@ -99,7 +99,7 @@ public class OperationController {
         if (optOperation.isPresent()) {
             operationRepository.deleteById(operationId);
         }
-        return "redirect:/product/operation/product_id/{productId}";
+        return "redirect:/manager/product/operation/product_id/{productId}";
     }
 
     private int createOPNumber(int productId){

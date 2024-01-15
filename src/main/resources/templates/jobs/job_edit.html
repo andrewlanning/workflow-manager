@@ -11,13 +11,13 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a a type="button" th:href="@{/jobs}" class="btn btn-light">Back</a>
+            <a a type="button" th:href="@{/manager/jobs}" class="btn btn-light">Back</a>
         </li>
     </ul>
 </header>
 <section class="container">
     <h1>Edit Job</h1>
-    <form th:action="@{/jobs/edit/{jobId}(jobId=${job.jobId})}" method="post" th:object="${job}">
+    <form th:action="@{/manager/jobs/edit/{jobId}(jobId=${job.jobId})}" method="post" th:object="${job}">
         <div class="form-group">
             <label for="productName">Product Name:</label>
             <input type="text" class="form-control" id="productName" name="productName"
@@ -47,9 +47,9 @@
         </div>
         <br>
         <button class="btn btn-primary" type="submit">Update</button>
-        <a th:href="@{/jobs/edit_step/job_id/{jobId}(jobId=${job.jobId})}" type="button"
+        <a th:href="@{/manager/jobs/edit_step/job_id/{jobId}(jobId=${job.jobId})}" type="button"
            class="btn btn-primary">Edit Step</a>
-        <a type="button" th:href="@{/jobs}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/manager/jobs}" class="btn btn-light">Cancel</a>
     </form>
 </section>
 
