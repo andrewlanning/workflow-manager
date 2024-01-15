@@ -17,7 +17,7 @@ public class AuthenticationFilter implements HandlerInterceptor {
     @Autowired
     AuthenticationController authenticationController;
 
-    private static final List<String> whitelist = Arrays.asList("/login", "/index", "/unauthorized", "/dashboard");
+    private static final List<String> whitelist = Arrays.asList("/login", "/logout", "/index", "/unauthorized", "/error");
 
     private static boolean isWhitelisted(String path) {
         for (String pathRoot : whitelist) {
@@ -50,6 +50,7 @@ public class AuthenticationFilter implements HandlerInterceptor {
 
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
+//        Boolean isAdminPath = isAdminWhitelisted(request.getRequestURI());
 
         if (user == null) {
             response.sendRedirect("/login");
