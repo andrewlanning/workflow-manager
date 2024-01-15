@@ -18,6 +18,12 @@ import java.util.Optional;
 public class ManagerController {
 
     @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OperationRepository operationRepository;
+    @Autowired
+    private LotRepository lotRepository;
+    @Autowired
     private JobRepository jobRepository;
 
     @Autowired
@@ -25,6 +31,19 @@ public class ManagerController {
 
     @GetMapping("")
     public String renderManagerPortal(Model model) {
+        List<String> pages = new ArrayList<>();
+        pages.add("Jobs");
+        pages.add("Products");
+        pages.add("Operations");
+
+        List<String> urlStrings = new ArrayList<>();
+        urlStrings.add("jobs");
+        urlStrings.add("product");
+        urlStrings.add("operation");
+
+        model.addAttribute("pages", pages);
+        model.addAttribute("url", urlStrings);
+
         Iterable<Job> jobRepositoryAll = jobRepository.findAll();
         List<Job> inProgressJobs = new ArrayList<>();
 

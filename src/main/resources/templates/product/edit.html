@@ -10,7 +10,7 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a th:href="@{/product}">Back</a>
+            <a type="button" th:href="@{/manager/product}" class="btn btn-light">Back</a>
         </li>
     </ul>
 </header>
@@ -30,21 +30,28 @@
         <div class="form-group">
             <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Product Photo</label>
-                <input class="form-control" type="file" id="formFile" accept="image/png, image/jpeg" name="productImage" onchange="previewImage();">
+                <input class="form-control" type="file" id="formFile" accept="image/png, image/jpeg" name="productImage"
+                       onchange="previewImage();">
             </div>
 
 
             <div id="imagePreview">
-                <img th:if="${product.image != null}" th:src="${product.image.url}" id="currentImage" alt="Current Image" style="width: 200px;"/>
-                <img id="preview" src="#" alt="New Image Preview" style="display: none; width: 200px;" />
+                <img th:if="${product.image != null}" th:src="${product.image.url}" id="currentImage"
+                     alt="Current Image" style="width: 200px;"/>
+                <img id="preview" src="#" alt="New Image Preview" style="display: none; width: 200px;"/>
             </div>
-
-
-
-
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a type="button" th:href="@{/manager/product}" class="btn btn-light">Cancel</a>
+        <br>
+        <div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a th:href="@{/manager/product/operation/product_id/{productId}(productId=${product.productId})}"
+               type="button" class="btn btn-primary">Manage Steps</a>
+            <a type="button" th:href="@{/manager/product}" class="btn btn-light">Cancel</a>
+        </div>
+        <br>
+        <a th:href="@{/manager/product/delete/{productId}(productId=${product.productId})}"
+           onclick="return confirm('Are you sure you want to Delete this Product?')" type="button"
+           class="btn btn-danger">Delete</a>
     </form>
 </div>
 
@@ -72,6 +79,7 @@
             }
         }
     }
+
 </script>
 
 </html>
