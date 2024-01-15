@@ -95,7 +95,7 @@ public class ProductController {
             }
         }
         productRepository.save(product);
-        return "redirect:/product";
+        return "redirect:/manager/product";
     }
 
     @GetMapping("/edit/{productId}")
@@ -149,7 +149,7 @@ public class ProductController {
 
             productRepository.deleteById(productId);
         }
-        return "redirect:/product";
+        return "redirect:/manager/product";
     }
 
     private String uploadImageAndGetUrl(MultipartFile imageFile) throws IOException {
