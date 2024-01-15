@@ -1,13 +1,7 @@
 package com.codewranglers.workflowmanager.controllers;
 
-import com.codewranglers.workflowmanager.models.Lot;
-import com.codewranglers.workflowmanager.models.Operation;
-import com.codewranglers.workflowmanager.models.Product;
-import com.codewranglers.workflowmanager.models.User;
-import com.codewranglers.workflowmanager.models.data.LotRepository;
-import com.codewranglers.workflowmanager.models.data.OperationRepository;
-import com.codewranglers.workflowmanager.models.data.ProductRepository;
-import com.codewranglers.workflowmanager.models.data.UserRepository;
+import com.codewranglers.workflowmanager.models.*;
+import com.codewranglers.workflowmanager.models.data.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,29 +18,24 @@ import java.util.Optional;
 public class ManagerController {
 
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private OperationRepository operationRepository;
-    @Autowired
-    private LotRepository lotRepository;
+    private JobRepository jobRepository;
 
     @Autowired
     private UserRepository userRepository;
 
     @GetMapping("")
     public String renderManagerPortal(Model model) {
-        List<String> pages = new ArrayList<>();
-        pages.add("Jobs");
-        pages.add("Products");
-        pages.add("Operations");
+        Iterable<Job> jobRepositoryAll = jobRepository.findAll();
+        List<Job> inProgressJobs = new ArrayList<>();
 
-        List<String> urlStrings = new ArrayList<>();
-        urlStrings.add("jobs");
-        urlStrings.add("product");
-        urlStrings.add("operation");
-
-        model.addAttribute("pages", pages);
-        model.addAttribute("url", urlStrings);
+        if (jobRepositoryAll != null){
+            for (Job j : jobRepositoryAll){
+                if (Boolean.FALSE.equals(j.getIsCompleted())){
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
         return "/manager/index";
     }
 
@@ -54,6 +43,13 @@ public class ManagerController {
     public String renderWorkforceTable (Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "/manager/view-workforce";
+    }
+
+    @GetMapping("/job/edit/{jobId}")
+    public String jobEdit(@PathVariable int jobId){
+
+        return "/manager/job_edit";
+
     }
 
 }

@@ -3,18 +3,18 @@ package com.codewranglers.workflowmanager.controllers;
 
 import com.codewranglers.workflowmanager.models.*;
 import com.codewranglers.workflowmanager.models.data.*;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -32,17 +32,20 @@ public class JobController {
     @Autowired
     private PartRepository partRepository;
 
+    private String url;
+
     @GetMapping("")
     public String index(Model model) {
         Iterable<Job> allJobs = jobRepository.findAll();
         List<Job> sortedJobs = new ArrayList<>();
 
-        for (Job j : allJobs){
+        for (Job j : allJobs) {
             sortedJobs.add(j);
         }
         Collections.reverse(sortedJobs);
 
         model.addAttribute("jobs", sortedJobs);
+        url = "/jobs";
         return "jobs/index";
     }
 
@@ -136,7 +139,20 @@ public class JobController {
             jobRepository.save(job);
         }
 
-        return "redirect:/manager/jobs";
+        if (("/jobs").equals(url)) {
+            return "redirect:/manager/jobs";
+        } else {
+            return "redirect:/manager";
+        }
+    }
+
+    @GetMapping("/home")
+    public String home(Model model) {
+        if (("/jobs").equals(url)) {
+            return "redirect:/manager/jobs";
+        } else {
+            return "redirect:/manager";
+        }
     }
 
     private String createWONumber() {
@@ -194,7 +210,7 @@ public class JobController {
             for (int i = 1; i < quantity + 1; i++) {
                 serNum++;
                 part.setSerNum("SN" + "-" + String.format("%03d", serNum));
-                totalParts.add(new Part(part.getSerNum(),  lot, part.getProduct(), job));
+                totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
             }
         }
         partRepository.saveAll(totalParts);
