@@ -19,8 +19,8 @@ public class HomeController {
         return "unauth";
     }
 
-    @GetMapping("/dashboard")
-    public String renderDashboard() {
-        return "dashboard";
+    @GetMapping("/index")
+    public String renderIndex() {
+        return "index";
     }
 }
