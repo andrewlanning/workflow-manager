@@ -29,7 +29,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/manager/product")
 public class ProductController {
 
     @Autowired

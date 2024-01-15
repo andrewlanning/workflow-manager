@@ -35,7 +35,7 @@
                 <img th:if="${product.key.image != null and product.key.image.url != null}" th:src="${product.key.image.url}" style="width:100px;">
             </td>
             <td>
-                <a th:href="@{/product/operation/product_id/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Manage Steps</a>
+                <a th:href="@{/manager/product/operation/product_id/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Manage Steps</a>
             </td>
             <td>
                 <a th:href="@{/product/edit/{productId}(productId=${product.key.productId})}" type="button" class="btn btn-primary">Edit Product</a>
