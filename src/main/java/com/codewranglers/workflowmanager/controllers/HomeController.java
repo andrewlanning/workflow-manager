@@ -13,4 +13,14 @@ public class HomeController {
     public String renderTestPortal() {
         return "redirect:/login";
     }
+
+    @GetMapping("/unauthorized")
+    public String renderUnauthLanding() {
+        return "unauth";
+    }
+
+    @GetMapping("/dashboard")
+    public String renderDashboard() {
+        return "dashboard";
+    }
 }
