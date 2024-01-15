@@ -134,7 +134,7 @@ public class ProductController {
             }
             productRepository.save(product);
         }
-        return "redirect:/product";
+        return "redirect:/manager/product";
     }
 
     @GetMapping("/delete/{productId}")

@@ -17,7 +17,7 @@
 </header>
 <section id="page" class="container-md">
     <h1>Jobs List</h1>
-    <a th:href="@{/jobs/add}" class="btn btn-primary create">Create New Job</a>
+    <a th:href="@{/manager/jobs/add}" class="btn btn-primary create">Create New Job</a>
     <table class="table table-striped table-content table-dark">
         <thead>
         <tr class="text-center">
@@ -34,7 +34,7 @@
         </thead>
         <tbody>
         <tr class="text-center" th:each="job : ${jobs}">
-            <td> <a th:href="@{/jobs/edit/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
+            <td> <a th:href="@{/manager/jobs/edit/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
             <td th:text="${job.product.productName}"></td>
             <td th:text="${job.quantity}"></td>
             <td th:text="${job.lot.lotNumber}"></td>
