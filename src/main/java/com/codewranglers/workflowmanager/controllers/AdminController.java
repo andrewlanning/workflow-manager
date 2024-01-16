@@ -1,7 +1,9 @@
 package com.codewranglers.workflowmanager.controllers;
 
 
+import com.codewranglers.workflowmanager.models.Job;
 import com.codewranglers.workflowmanager.models.User;
+import com.codewranglers.workflowmanager.models.data.JobRepository;
 import com.codewranglers.workflowmanager.models.data.UserRepository;
 import com.codewranglers.workflowmanager.models.dto.CreateUserDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +25,8 @@ public class AdminController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
     @GetMapping("")
     public String renderAdminPortal(Model model) {
@@ -70,14 +74,14 @@ public class AdminController {
         //check for existing user with username
         User existingUser = userRepository.findByUsername(createUserDTO.getUsername());
         if (existingUser != null) {
-            errors.rejectValue("username", "username.alreadyExists", "That username is already in use." );
+            errors.rejectValue("username", "username.alreadyExists", "That username is already in use.");
             return "admin/user_management/create_user";
         }
         //check password and confirmPassword match
         String password = createUserDTO.getPassword();
         String confirmPassword = createUserDTO.getConfirmPassword();
         if (!password.equals(confirmPassword)) {
-            errors.rejectValue("password", "password.mismatch", "Passwords do not match." );
+            errors.rejectValue("password", "password.mismatch", "Passwords do not match.");
             return "admin/user_management/create_user";
         }
 
@@ -94,7 +98,26 @@ public class AdminController {
     }
 
     @GetMapping("/workflow_management")
-    public String renderWorkflowManagementPortal() {
+    public String renderWorkflowManagementPortal(Model model) {
+
+        Iterable<Job> jobRepositoryAll = jobRepository.findAll();
+        List<Job> inProgressJobs = new ArrayList<>();
+
+        if (jobRepositoryAll != null) {
+            for (Job j : jobRepositoryAll) {
+                if (Boolean.FALSE.equals(j.getIsCompleted())) {
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
+
         return "/admin/workflow_management/index";
+    }
+
+    @GetMapping("/view-workforce")
+    public String renderWorkforceTable (Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "/admin/workflow_management/view-workforce";
     }
 }
