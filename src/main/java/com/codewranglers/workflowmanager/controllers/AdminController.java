@@ -32,7 +32,6 @@ public class AdminController {
     public String renderAdminPortal(Model model) {
         List<String> pages = new ArrayList<>();
         pages.add("User Management");
-        pages.add("Role Management");
         pages.add("Workflow Management");
 
         List<String> user = new ArrayList<>();
@@ -42,7 +41,6 @@ public class AdminController {
 
         List<String> urlStrings = new ArrayList<>();
         urlStrings.add("usermanagement");
-        urlStrings.add("rolemanagement");
         urlStrings.add("workflowmanagement");
 
         model.addAttribute("pages", pages);
