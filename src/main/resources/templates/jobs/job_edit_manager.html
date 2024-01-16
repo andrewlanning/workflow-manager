@@ -11,7 +11,7 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a a type="button" th:href="@{/manager/jobs/home}" class="btn btn-light">Back</a>
+            <a a type="button" th:href="@{/manager}" class="btn btn-light">Back</a>
         </li>
     </ul>
 </header>
@@ -37,7 +37,7 @@
         <button class="btn btn-primary" type="submit">Update</button>
         <a th:href="@{/manager/jobs/edit_step/job_id/{jobId}(jobId=${job.jobId})}" type="button"
            class="btn btn-primary">Edit Step</a>
-        <a type="button" th:href="@{/manager/jobs/home}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/manager}" class="btn btn-light">Cancel</a>
     </form>
 </section>
 
