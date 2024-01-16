@@ -29,7 +29,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/manager/product")
 public class ProductController {
 
     @Autowired
@@ -95,7 +95,7 @@ public class ProductController {
             }
         }
         productRepository.save(product);
-        return "redirect:/product";
+        return "redirect:/manager/product";
     }
 
     @GetMapping("/edit/{productId}")
@@ -134,7 +134,7 @@ public class ProductController {
             }
             productRepository.save(product);
         }
-        return "redirect:/product";
+        return "redirect:/manager/product";
     }
 
     @GetMapping("/delete/{productId}")
@@ -149,7 +149,7 @@ public class ProductController {
 
             productRepository.deleteById(productId);
         }
-        return "redirect:/product";
+        return "redirect:/manager/product";
     }
 
     private String uploadImageAndGetUrl(MultipartFile imageFile) throws IOException {

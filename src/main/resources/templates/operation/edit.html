@@ -9,13 +9,15 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a th:href="@{/product/operation/product_id/{productId}(productId=${productId})}" type="button" class="btn btn-light">Back</a>
+            <a th:href="@{/manager/product/operation/product_id/{productId}(productId=${productId})}" type="button"
+               class="btn btn-light">Back</a>
         </li>
     </ul>
 </header>
 <div class="container">
     <h1 th:text="${'Edit Step for ' + productName}">Edit Operation</h1>
-    <form th:action="@{/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" method="post" th:object="${operation}">
+    <form th:action="@{/manager/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}"
+          method="post" th:object="${operation}">
 
         <div class="form-group">
             <label for="operationName">Step Name:</label>
@@ -26,8 +28,13 @@
             <textarea class="form-control" id="operationText" rows="3" th:field="*{opText}" required></textarea>
         </div>
         <br>
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a type="button" th:href="@{/product/operation/product_id/{productId}(productId=${productId})}" class="btn btn-light">Cancel</a>
+        <div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a type="button" th:href="@{/manager/product/operation/product_id/{productId}(productId=${productId})}"
+               class="btn btn-light">Cancel</a>
+        </div>
+        <br>
+        <a th:href="@{/manager/product/operation/product_id/{productId}/delete/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" onclick="return confirm('Are you sure you want to Delete this Step?')" type="button" class="btn btn-danger">Delete</a>
     </form>
 </div>
 

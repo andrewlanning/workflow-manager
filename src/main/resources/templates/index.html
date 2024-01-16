@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="~{fragments :: head}">
+<head
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css" th:href="@{/global-styles.css}"/>
 </head>
-<body>
-    <div th:replace="~{fragments :: page-header}"></div>
-
-    <h1>Test Page</h1>
-    <a href='/admin'>Admin</a>
-    <a href='/manager'>Manager</a>
-    <a href='/member'>Member</a>
-
-</body>
+    <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace; height:100vh; display:flex; align-items: center;">
+    <section id='page' class="container-md" style="display:flex; flex-direction:column; justify-content: center; align-items: center; gap: 1rem;">
+        <img th:src="@{/images/white_logo.png}" alt="" style="max-width:650px;">
+        <div>
+            <a href='/admin' class="waystation_link" style="font-size:1.5rem;">Admin</a>
+            <span style="color: #007bff; font-size:1.5rem;"> | </span>
+            <a href='/manager' class="waystation_link" style="font-size:1.5rem;">Manager</a>
+            <span style="color: #007bff; font-size:1.5rem;"> | </span>
+            <a href='/member' class="waystation_link" style="font-size:1.5rem;">Member</a>
+            <span style="color: #007bff; font-size:1.5rem;"> | </span>
+            <a href='/logout' class="waystation_link" style="font-size:1.5rem;">Logout</a>
+        </div>
+    </section>
+    </body>
 </html>

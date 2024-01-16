@@ -16,10 +16,10 @@
 </header>
 <section class="container">
     <h1>Job Creation Portal</h1>
-    <form th:action="@{/jobs/add}" method="post" th:object="${job}">
+    <form th:action="@{/manager/jobs/add}" method="post" th:object="${job}">
         <div class="form-group">
             <label for="productName">Select Product:</label>
-            <select class="form-select" th:field="*{product}" id="productName" required>
+            <select th:field="*{product}" id="productName" required>
                 <option value="" selected>Please Select a Product</option>
                 <option th:each="product : ${products}"
                         th:value="${product.productId}"
@@ -29,20 +29,17 @@
         <br>
         <div class="form-group">
             <label for="quantity">Quantity:</label>
-            <input type="number" class="form-control" id="quantity" name="quantity" th:field="*{quantity}" required>
+            <input type="number" id="quantity" name="quantity" th:field="*{quantity}" required>
         </div>
         <br>
-        <label for="dueDate">Due Date:</label>
-        <div class="form-select">
-            <input type="date" class="form-control" id="dueDate" name="dueDate" th:field="*{dueDate}" required>
+        <div class="input-group date" data-provide="datepicker">
+            <label>Due Date:</label>
+            <input type="date" class="datepicker" id="dueDate" name="dueDate" th:field="*{dueDate}" required>
         </div>
         <br>
         <button class="btn btn-primary" type="submit">Create</button>
-        <a type="button" th:href="@{/jobs}" class="btn btn-light">Cancel</a>
+        <a type="button" th:href="@{/manager}" class="btn btn-light">Cancel</a>
     </form>
 </section>
-
-
-
 </body>
 </html>

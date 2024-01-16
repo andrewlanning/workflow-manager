@@ -32,7 +32,6 @@ public class User {
     private Integer id;
     @Column(name = "username")
     private String username; // Combo of lastname first initial (ie: lanninga)
-    @NotNull
     @Column(name = "pwhash")
     private String pwhash; // Encoded w/ Bcrypt SHA256
     @Column(name = "firstname")

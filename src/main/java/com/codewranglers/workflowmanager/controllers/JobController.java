@@ -3,22 +3,22 @@ package com.codewranglers.workflowmanager.controllers;
 
 import com.codewranglers.workflowmanager.models.*;
 import com.codewranglers.workflowmanager.models.data.*;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/jobs")
+@RequestMapping("/manager/jobs")
 public class JobController {
 
     @Autowired
@@ -32,18 +32,36 @@ public class JobController {
     @Autowired
     private PartRepository partRepository;
 
+    private String url;
+
     @GetMapping("")
     public String index(Model model) {
         Iterable<Job> allJobs = jobRepository.findAll();
         List<Job> sortedJobs = new ArrayList<>();
 
-        for (Job j : allJobs){
+        for (Job j : allJobs) {
             sortedJobs.add(j);
         }
         Collections.reverse(sortedJobs);
 
         model.addAttribute("jobs", sortedJobs);
+        url = "/jobs";
         return "jobs/index";
+    }
+
+    @GetMapping("/completed_jobs")
+    public String completedJobs(Model model) {
+        Iterable<Job> allJobs = jobRepository.findAll();
+        List<Job> completedJobs = new ArrayList<>();
+
+        for (Job j : allJobs) {
+            if (Boolean.TRUE.equals(j.getIsCompleted())){
+                completedJobs.add(j);
+            }
+        }
+
+        model.addAttribute("completedJobs", completedJobs);
+        return "jobs/completed_jobs";
     }
 
     @GetMapping("/add")
@@ -57,7 +75,7 @@ public class JobController {
     public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
-            return "jobs/job_add";
+            return "/jobs/job_add";
         }
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
@@ -68,7 +86,7 @@ public class JobController {
         Job job = jobRepository.save(newJob);
 
         createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), newJob.getLot(), job);
-        return "redirect:/jobs";
+        return "redirect:/manager";
     }
 
     @GetMapping("/edit_step/job_id/{jobId}")
@@ -96,7 +114,7 @@ public class JobController {
             jobRepository.save(job);
         }
 
-        return "redirect:/jobs/edit/{jobId}";
+        return "redirect:/manager/jobs/edit/{jobId}";
     }
 
     @GetMapping("/edit/{jobId}")
@@ -105,15 +123,15 @@ public class JobController {
         if (jobById.isPresent()) {
             Job job = jobById.get();
             if (Boolean.TRUE.equals(job.getIsCompleted())) {
-                return "redirect:/jobs";
+                return "redirect:/manager/jobs";
             } else {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
                 model.addAttribute("isCompleted", job.getIsCompleted());
-                return "/jobs/job_edit";
+                return "/jobs/job_edit_manager";
             }
         } else {
-            return "redirect:/jobs/edit";
+            return "/redirect:/manager/jobs/edit";
         }
     }
 
@@ -136,7 +154,20 @@ public class JobController {
             jobRepository.save(job);
         }
 
-        return "redirect:/jobs";
+        if (("/jobs").equals(url)) {
+            return "redirect:/manager/jobs";
+        } else {
+            return "redirect:/manager";
+        }
+    }
+
+    @GetMapping("/home")
+    public String home(Model model) {
+        if (("/jobs").equals(url)) {
+            return "redirect:/manager/jobs";
+        } else {
+            return "redirect:/manager";
+        }
     }
 
     private String createWONumber() {
@@ -182,7 +213,7 @@ public class JobController {
 
         if (byproductProductId.isEmpty()) {
             for (int i = 1; i < quantity + 1; i++) {
-                part.setSerNum("SN" + "-" + String.format("%03d", i));
+                part.setSerNum("SN" + "-" + String.format("%05d", i));
                 part.setJob(job);
                 totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
             }
@@ -193,8 +224,8 @@ public class JobController {
             }
             for (int i = 1; i < quantity + 1; i++) {
                 serNum++;
-                part.setSerNum("SN" + "-" + String.format("%03d", serNum));
-                totalParts.add(new Part(part.getSerNum(),  lot, part.getProduct(), job));
+                part.setSerNum("SN" + "-" + String.format("%05d", serNum));
+                totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
             }
         }
         partRepository.saveAll(totalParts);
