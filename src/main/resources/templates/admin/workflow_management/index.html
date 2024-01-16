@@ -26,7 +26,7 @@
     <div id="dashboard" class="row">
         <div class="col-sm">
             <div class="option-container">
-                <a th:href="@{/manager/jobs}">Create New Workflow</a>
+                <a th:href="@{/manager/jobs/add}">Create New Job</a>
             </div>
             <div class="col-sm">
                 <div class="option-container">
@@ -46,12 +46,7 @@
         </div>
         <div class="col-sm">
             <div class="option-container">
-                <a th:href="@{/parts}">Parts</a>
-            </div>
-        </div>
-        <div class="col-sm">
-            <div class="option-container">
-                <a th:href="@{/lots}">Lots</a>
+                <a th:href="@{/manager/jobs/completed_jobs}">Completed Jobs</a>
             </div>
         </div>
     </div>

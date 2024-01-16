@@ -49,6 +49,21 @@ public class JobController {
         return "jobs/index";
     }
 
+    @GetMapping("/completed_jobs")
+    public String completedJobs(Model model) {
+        Iterable<Job> allJobs = jobRepository.findAll();
+        List<Job> completedJobs = new ArrayList<>();
+
+        for (Job j : allJobs) {
+            if (Boolean.TRUE.equals(j.getIsCompleted())){
+                completedJobs.add(j);
+            }
+        }
+
+        model.addAttribute("completedJobs", completedJobs);
+        return "jobs/completed_jobs";
+    }
+
     @GetMapping("/add")
     public String displayAddJobForm(Model model) {
         model.addAttribute("products", productRepository.findAll());
@@ -71,7 +86,7 @@ public class JobController {
         Job job = jobRepository.save(newJob);
 
         createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), newJob.getLot(), job);
-        return "redirect:/manager/jobs";
+        return "redirect:/manager";
     }
 
     @GetMapping("/edit_step/job_id/{jobId}")
@@ -113,7 +128,7 @@ public class JobController {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
                 model.addAttribute("isCompleted", job.getIsCompleted());
-                return "/jobs/job_edit";
+                return "/jobs/job_edit_manager";
             }
         } else {
             return "/redirect:/manager/jobs/edit";
@@ -198,7 +213,7 @@ public class JobController {
 
         if (byproductProductId.isEmpty()) {
             for (int i = 1; i < quantity + 1; i++) {
-                part.setSerNum("SN" + "-" + String.format("%03d", i));
+                part.setSerNum("SN" + "-" + String.format("%05d", i));
                 part.setJob(job);
                 totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
             }
@@ -209,7 +224,7 @@ public class JobController {
             }
             for (int i = 1; i < quantity + 1; i++) {
                 serNum++;
-                part.setSerNum("SN" + "-" + String.format("%03d", serNum));
+                part.setSerNum("SN" + "-" + String.format("%05d", serNum));
                 totalParts.add(new Part(part.getSerNum(), lot, part.getProduct(), job));
             }
         }
