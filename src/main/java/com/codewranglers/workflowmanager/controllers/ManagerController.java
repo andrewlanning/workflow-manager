@@ -43,6 +43,8 @@ public class ManagerController {
     @Autowired
     private ImageRepository imageRepository;
 
+    int productId;
+
     @GetMapping("")
     public String renderManagerPortal(Model model) {
         List<String> pages = new ArrayList<>();
@@ -78,6 +80,82 @@ public class ManagerController {
         return "/manager/view-workforce";
     }
 
+    @GetMapping("/product/operation/product_id/{productId}")
+    public String renderOperationPortal(Model model, @PathVariable int productId) {
+        String productName = productRepository.findById(productId).get().getProductName();
+        model.addAttribute("productName", productName);
+        model.addAttribute("operations", operationRepository.findByproductProductId(productId));
+        this.productId=productId;
+        return "/operation/manager/index";
+    }
+
+    @GetMapping("/product/operation/product_id/{productId}/add")
+    public String renderOperationCreationPortal(Model model,  @PathVariable int productId) {
+        String productName = productRepository.findById(productId).get().getProductName();
+        model.addAttribute("productName", productName);
+        model.addAttribute("productId", this.productId);
+        model.addAttribute("operations", new Operation());
+        return "/operation/manager/create_operation";
+    }
+
+    @PostMapping("/product/operation/product_id/{productId}/add")
+    public String processOperationCreation(@ModelAttribute("operations") Operation operation) {
+        operation.setOpNumber(createOPNumber(productId));
+        operation.setProduct(new Product(productId));
+        operationRepository.save(operation);
+        return "redirect:/manager/product/operation/product_id/{productId}";
+    }
+
+
+    @GetMapping("/product/operation/product_id/{productId}/edit/operation_id/{operationId}")
+    public String displayEditOperationForm(Model model, @PathVariable int operationId, @PathVariable int productId) {
+        Optional<Operation> operationById = operationRepository.findById(operationId);
+        String productName = productRepository.findById(productId).get().getProductName();
+        model.addAttribute("productName", productName);
+        model.addAttribute("productId", productId);
+
+        if (operationById.isPresent()) {
+            Operation operation = operationById.get();
+            model.addAttribute("operation", operation);
+            model.addAttribute("products", productRepository.findAll());
+            return "/operation/manager/edit";
+        } else {
+            return "redirect:/manager/product/operation/product_id/{productId}";
+        }
+    }
+
+    @PostMapping("/product/operation/product_id/{productId}/edit/operation_id/{operationId}")
+    public String processEditOperationForm(@PathVariable int operationId,
+                                           @PathVariable int productId,
+                                           @ModelAttribute @Valid Operation editedOperation,
+                                           Errors errors, Model model) {
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Edit Operation");
+            return "/operation/manager/edit";
+        }
+
+        Optional<Operation> operationById = operationRepository.findById(operationId);
+        model.addAttribute("productId", productId);
+        if (operationById.isPresent()) {
+            Operation operation = operationById.get();
+            operation.setOpName(editedOperation.getOpName());
+            operation.setOpText(editedOperation.getOpText());
+            operationRepository.save(operation);
+        }
+        return "redirect:/manager/product/operation/product_id/{productId}";
+    }
+
+    @GetMapping("/product/operation/product_id/{productId}/delete/operation_id/{operationId}")
+    public String deleteOperation(Model model, @PathVariable int operationId, @PathVariable int productId) {
+        Optional<Operation> optOperation = operationRepository.findById(operationId);
+        model.addAttribute("productId", productId);
+        if (optOperation.isPresent()) {
+            operationRepository.deleteById(operationId);
+        }
+        return "redirect:/manager/product/operation/product_id/{productId}";
+    }
+
     @GetMapping("/product")
     public String renderProductPortal(Model model) {
         // Using Map with key Product and Value total steps to show total steps on index page
@@ -107,13 +185,13 @@ public class ManagerController {
         }
 
         model.addAttribute("products", finalMap);
-        return "/product/index";
+        return "/product/manager/index";
     }
 
     @GetMapping("/product/add")
     public String renderProductCreationPortal(Model model) {
         model.addAttribute("product", new Product());
-        return "/product/create_product";
+        return "/product/manager/create_product";
     }
 
     @PostMapping("/product/add")
@@ -143,7 +221,7 @@ public class ManagerController {
             Product product = productById.get();
             model.addAttribute("title", "Edit Product");
             model.addAttribute("product", product);
-            return "/product/edit";
+            return "/product/manager/edit";
         } else {
             return "redirect:/product/edit";
         }
@@ -201,7 +279,7 @@ public class ManagerController {
         Collections.reverse(sortedJobs);
 
         model.addAttribute("jobs", sortedJobs);
-        return "jobs/index";
+        return "jobs/manager/index";
     }
 
     @GetMapping("/jobs/completed_jobs")
@@ -216,21 +294,21 @@ public class ManagerController {
         }
 
         model.addAttribute("completedJobs", completedJobs);
-        return "jobs/completed_jobs";
+        return "jobs/manager/completed_jobs";
     }
 
     @GetMapping("/jobs/add")
     public String displayAddJobForm(Model model) {
         model.addAttribute("products", productRepository.findAll());
         model.addAttribute(new Job());
-        return "jobs/job_add";
+        return "jobs/manager/job_add";
     }
 
     @PostMapping("/jobs/add")
     public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
-            return "/jobs/job_add";
+            return "/jobs/manager/job_add";
         }
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
@@ -252,9 +330,9 @@ public class ManagerController {
             List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
             model.addAttribute("steps", byproductProductId);
             model.addAttribute("job", job);
-            return "/jobs/job_edit_step";
+            return "/jobs/manager/job_edit_step";
         } else {
-            return "/jobs/edit_step/job_id/{jobId}";
+            return "/jobs/manager/edit_step/job_id/{jobId}";
         }
     }
 
@@ -283,7 +361,7 @@ public class ManagerController {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
                 model.addAttribute("isCompleted", job.getIsCompleted());
-                return "/jobs/job_edit_manager";
+                return "/jobs/manager/job_edit_manager";
             }
         } else {
             return "/redirect:/manager/jobs/edit";
@@ -314,13 +392,13 @@ public class ManagerController {
     @GetMapping("/view_parts")
     private String getAllParts(Model model) {
         model.addAttribute("parts", partRepository.findAll());
-        return "parts/index";
+        return "parts/manager/index";
     }
 
     @GetMapping("/view_lots")
     private String getAlllots(Model model) {
         model.addAttribute("lots", lotRepository.findAll());
-        return "lots/index";
+        return "lots/manager/index";
     }
 
     private String createWONumber() {
@@ -333,6 +411,23 @@ public class ManagerController {
         woNumber++;
 
         return "WO" + String.format(String.format("%04d", woNumber));
+    }
+
+    private int createOPNumber(int productId){
+        List<Operation> byproductProductId = operationRepository.findByproductProductId(productId);
+        int opNumber = 0;
+
+        if (byproductProductId != null) {
+            for (Operation o : byproductProductId) {
+                opNumber = o.getOpNumber();
+            }
+            opNumber++;
+        } else {
+            opNumber = 1;
+        }
+
+        return opNumber;
+
     }
 
     private String uploadImageAndGetUrl(MultipartFile imageFile) throws IOException {
