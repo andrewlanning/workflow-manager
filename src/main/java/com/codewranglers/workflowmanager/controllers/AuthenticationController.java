@@ -54,6 +54,8 @@ public class AuthenticationController {
     @PostMapping("/login")
     public String processLoginForm(@ModelAttribute @Valid LoginFormDTO loginFormDTO, Errors errors, HttpServletRequest request) {
 
+        String portal = null;
+
         if (errors.hasErrors()) {
             return "login";
         }
@@ -67,8 +69,16 @@ public class AuthenticationController {
             return "login";
         }
 
+        if (theUser.getRole() == 1) {
+            portal = "redirect:/manager";
+        } else if (theUser.getRole() == 2) {
+            portal = "redirect:/member";
+        } else if (theUser.getRole() == 3) {
+            portal = "redirect:/admin";
+        }
+
         setUserInSession(request.getSession(),theUser);
-        return "redirect:/index";
+        return portal;
 
 
     }
