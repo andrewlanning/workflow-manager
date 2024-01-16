@@ -119,11 +119,6 @@ public class AdminController {
                                       @ModelAttribute @Valid User editedUser,
                                       Errors errors, Model model) {
 
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Edit user");
-            return "/admin/user_management/edit";
-        }
-
         Optional<User> optUser = userRepository.findById(userId);
         if (optUser.isPresent()) {
             User user = optUser.get();
@@ -134,6 +129,11 @@ public class AdminController {
             user.setEmail(editedUser.getEmail());
             userRepository.save(user);
         }
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Edit user");
+            return "admin/user_management/edit";
+        }
+
         return "redirect:/admin/user_management";
     }
 
