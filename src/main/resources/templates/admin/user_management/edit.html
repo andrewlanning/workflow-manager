@@ -10,7 +10,7 @@
 <div th:replace="fragments :: page-header"></div>
 <div class="container">
     <h1>Edit User</h1>
-    <form th:action="@{/users/edit/{userId}(userId=${user.id})}" method="post" th:object="${user}">
+    <form th:action="@{/admin/user_management/edit/{userId}(userId=${user.id})}" method="post" th:object="${user}">
 
         <div class="form-group">
             <label>Username:</label>
@@ -35,9 +35,9 @@
                 <option value="3" th:selected="${user.role == 3}">Administrator</option>
             </select>
         </div>
-        <!-- Add other fields as needed -->
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a type="button" th:href="@{/admin/user_management}" class="btn btn-light">Cancel</a>
     </form>
 </div>
 

@@ -15,9 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -54,7 +52,21 @@ public class AdminController {
     @GetMapping("/user_management")
     public String renderUserManagementPortal(Model model) {
         Iterable<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
+
+        Map<User, String> userMap = new LinkedHashMap<>();
+
+        for (User user : users) {
+            if (user.getRole() == 1) {
+                userMap.put(user, "Manager");
+            }
+            if (user.getRole() == 2) {
+                userMap.put(user, "Member");
+            }
+            if (user.getRole() == 3) {
+                userMap.put(user, "Administrator");
+            }
+        }
+        model.addAttribute("users", userMap);
         return "admin/user_management/index";
     }
 
@@ -89,6 +101,50 @@ public class AdminController {
 
 
         userRepository.save(newUser);
+        return "redirect:/admin/user_management";
+    }
+
+    @GetMapping("/user_management/edit/{userId}")
+    public String displayEditUserForm(Model model, @PathVariable int userId) {
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            model.addAttribute("title", "Edit User");
+            model.addAttribute("user", user);
+            return "admin/user_management/edit";
+        } else {
+            return "redirect:admin/user_management/edit";
+        }
+    }
+    @PostMapping("/user_management/edit/{userId}")
+    public String processEditUserForm(@PathVariable int userId,
+                                      @ModelAttribute @Valid User editedUser,
+                                      Errors errors, Model model) {
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Edit user");
+            return "/admin/user_management/edit";
+        }
+
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            user.setUsername(editedUser.getUsername());
+            user.setFirstname(editedUser.getFirstname());
+            user.setLastname(editedUser.getLastname());
+            user.setRole(editedUser.getRole());
+            user.setEmail(editedUser.getEmail());
+            userRepository.save(user);
+        }
+        return "redirect:/admin/user_management";
+    }
+
+    @GetMapping("/user_management/delete/{userId}")
+    public String deleteUser(@PathVariable int userId) {
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            userRepository.deleteById(userId);
+        }
         return "redirect:/admin/user_management";
     }
 
