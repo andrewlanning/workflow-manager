@@ -31,6 +31,9 @@
             <td> <a th:href="@{/manager/product/edit/{productId}(productId=${product.key.productId})}" th:text="${product.key.productName}"></td>
             <td th:text="${product.key.productDescription}"></td>
             <td th:text="${product.value}"></td>
+            <td style="width:100px;">
+                <img th:if="${product.key.image != null and product.key.image.url != null}" th:src="${product.key.image.url}" style="width:100px; border-radius:8px;">
+            </td>
         </tr>
         </tbody>
     </table>
