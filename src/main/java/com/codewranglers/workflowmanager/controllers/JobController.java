@@ -71,7 +71,7 @@ public class JobController {
         Job job = jobRepository.save(newJob);
 
         createParts(newJob.getProduct().getProductId(), newJob.getQuantity(), newJob.getLot(), job);
-        return "redirect:/manager/jobs";
+        return "redirect:/manager";
     }
 
     @GetMapping("/edit_step/job_id/{jobId}")
