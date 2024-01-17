@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width"/>
+    <title>Edit Operation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
+<header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
+        <li class="list-item">
+            <a th:href="@{/admin/workflow_management/product/operation/product_id/{productId}(productId=${productId})}" type="button"
+               class="btn btn-light">Back</a>
+        </li>
+    </ul>
+</header>
+<div class="container">
+    <h1 th:text="${'Edit Step for ' + productName}">Edit Operation</h1>
+    <form th:action="@{/admin/workflow_management/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}"
+          method="post" th:object="${operation}">
+
+        <div class="form-group">
+            <label for="operationName">Step Name:</label>
+            <input type="text" class="form-control" id="operationName" th:field="*{opName}">
+        </div>
+        <div class="form-group">
+            <label for="operationText">Step Description:</label>
+            <textarea class="form-control" id="operationText" rows="3" th:field="*{opText}" required></textarea>
+        </div>
+        <br>
+        <div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a type="button" th:href="@{/admin/workflow_management/product/operation/product_id/{productId}(productId=${productId})}"
+               class="btn btn-light">Cancel</a>
+        </div>
+        <br>
+        <a th:href="@{/admin/workflow_management/product/operation/product_id/{productId}/delete/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" onclick="return confirm('Are you sure you want to Delete this Step?')" type="button" class="btn btn-danger">Delete</a>
+    </form>
+</div>
+
+</body>
+</html>
