@@ -158,14 +158,14 @@ public class AdminController {
                                             @ModelAttribute @Valid UpdatePasswordDTO updatePasswordDTO,
                                             Errors errors) {
         if (errors.hasErrors()) {
-            return ("user_management/update_password/" + userId);
+            return ("redirect:/admin/user_management/update_password/" + userId);
         }
 
         String password = updatePasswordDTO.getPassword();
         String confirmPassword = updatePasswordDTO.getConfirmPassword();
         if (!password.equals(confirmPassword)) {
             errors.rejectValue("password", "password.mismatch", "Passwords do not match.");
-            return ("user_management/update_password/" + userId);
+            return ("redirect:/admin/user_management/update_password/" + userId);
         }
 
         Optional<User> optUser = userRepository.findById(userId);
