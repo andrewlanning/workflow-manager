@@ -152,15 +152,15 @@ public class ProductController {
         return "redirect:/manager/product";
     }
 
-    private String uploadImageAndGetUrl(MultipartFile imageFile) throws IOException {
+    private String uploadImageAndGetUrl(MultipartFile imageFile) throws IOException {  //if an I/O error occurs while the method is running, the method stops
         // API URL
         String apiUrl = "https://freeimage.host/api/1/upload";
 
-        // Convert MultipartFile to Base64
-        String base64Image = Base64.getEncoder().encodeToString(imageFile.getBytes());
+        // Convert MultipartFile to Base64 string
+        String base64Image = Base64.getEncoder().encodeToString(imageFile.getBytes()); //base 64 is required by the API
 
         // Prepare request body
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>(); //MultiValueMap is standard practice for REST apibody
         requestBody.add("key", "6d207e02198a847aa98d0a2a901485a5");
         requestBody.add("source", base64Image);
         requestBody.add("format", "json");
