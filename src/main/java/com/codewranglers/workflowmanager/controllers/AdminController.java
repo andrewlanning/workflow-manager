@@ -252,6 +252,24 @@ public class AdminController {
         return "/admin/workflow_management/index";
     }
 
+    @GetMapping("/workflow_management/job/search")
+    public String searchInProcessJobs (@RequestParam(defaultValue = "") String pName, Model model ) {
+        List<Job> jobRepositoryAll = jobRepository.findByProductProductNameStartingWithIgnoreCase(pName);
+        List<Job> inProgressJobs = new ArrayList<>();
+
+        if (jobRepositoryAll != null) {
+            for (Job j : jobRepositoryAll) {
+                if (Boolean.FALSE.equals(j.getIsCompleted())) {
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
+        model.addAttribute("productName", pName);
+
+        return "/admin/workflow_management/search";
+    }
+
     @GetMapping("/workflow_management/product/operation/product_id/{productId}")
     public String renderOperationPortal(Model model, @PathVariable int productId) {
         String productName = productRepository.findById(productId).get().getProductName();
