@@ -6,6 +6,7 @@ import com.codewranglers.workflowmanager.models.User;
 import com.codewranglers.workflowmanager.models.data.JobRepository;
 import com.codewranglers.workflowmanager.models.data.UserRepository;
 import com.codewranglers.workflowmanager.models.dto.CreateUserDTO;
+import com.codewranglers.workflowmanager.models.dto.UpdatePasswordDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -139,7 +140,15 @@ public class AdminController {
 
     @GetMapping("/user_management/update_password/{userId}")
     public String displayUpdatePasswordForm(Model model, @PathVariable int userId) {
-        model.addAttribute(new )
+        model.addAttribute(new UpdatePasswordDTO());
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            model.addAttribute("user", user);
+            return "admin/user_management/update_password";
+        } else {
+            return "redirect:admin/user_management";
+        }
     }
 
     @GetMapping("/user_management/delete/{userId}")
