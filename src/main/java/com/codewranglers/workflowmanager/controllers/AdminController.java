@@ -359,6 +359,40 @@ public class AdminController {
         return "/product/admin/index";
     }
 
+    @GetMapping("/workflow_management/product/search")
+    public String searchProduct(@RequestParam(defaultValue = "") String pName, Model model){
+        // Using Map with key Product and Value total steps to show total steps on index page
+        Map<Product, Integer> finalMap = new LinkedHashMap<>();
+
+        int counter;
+
+        List<Product> products = productRepository.findByProductNameStartingWithIgnoreCase(pName);
+
+        for (Product p : products) {
+            counter = 0;
+
+            List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+
+            if (!operations.isEmpty()) {
+
+                for (Operation o : operations) {
+
+                    if (o != null) {
+                        counter++;
+                    } else {
+                        counter = 0;
+                    }
+                }
+            }
+
+            finalMap.put(p, counter);
+        }
+
+        model.addAttribute("productName", pName);
+        model.addAttribute("products", finalMap);
+        return "product/admin/search";
+    }
+
     @GetMapping("/workflow_management/product/add")
     public String renderProductCreationPortal(Model model) {
         model.addAttribute("product", new Product());
