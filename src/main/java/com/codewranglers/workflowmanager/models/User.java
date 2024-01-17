@@ -62,6 +62,10 @@ public class User {
         return encoder.matches(password, pwhash);
     }
 
+    public void setPwhash(String pwhash) {
+        this.pwhash = pwhash;
+    }
+
     public Integer getId() {
         return id;
     }

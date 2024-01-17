@@ -8,7 +8,7 @@ import com.codewranglers.workflowmanager.models.data.UserRepository;
 import com.codewranglers.workflowmanager.models.dto.CreateUserDTO;
 import com.codewranglers.workflowmanager.models.dto.UpdatePasswordDTO;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +26,8 @@ public class AdminController {
     private UserRepository userRepository;
     @Autowired
     private JobRepository jobRepository;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @GetMapping("")
     public String renderAdminPortal(Model model) {
@@ -149,6 +151,30 @@ public class AdminController {
         } else {
             return "redirect:admin/user_management";
         }
+    }
+
+    @PostMapping("/user_management/update_password/{userId}")
+    public String processUpdatePasswordForm(@PathVariable int userId,
+                                            @ModelAttribute @Valid UpdatePasswordDTO updatePasswordDTO,
+                                            Errors errors) {
+        if (errors.hasErrors()) {
+            return ("user_management/update_password/" + userId);
+        }
+
+        String password = updatePasswordDTO.getPassword();
+        String confirmPassword = updatePasswordDTO.getConfirmPassword();
+        if (!password.equals(confirmPassword)) {
+            errors.rejectValue("password", "password.mismatch", "Passwords do not match.");
+            return ("user_management/update_password/" + userId);
+        }
+
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            user.setPwhash(encoder.encode(password));
+            userRepository.save(user);
+        }
+        return "redirect:/admin/user_management";
     }
 
     @GetMapping("/user_management/delete/{userId}")
