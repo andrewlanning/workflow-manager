@@ -69,7 +69,7 @@ public class AdminController {
     }
 
     @GetMapping("/user_management/create_user")
-    public String renderUserCreationPortal(Model model, HttpSession session) {
+    public String renderUserCreationPortal(Model model) {
         model.addAttribute(new CreateUserDTO());
         return "admin/user_management/create_user";
     }
@@ -135,6 +135,11 @@ public class AdminController {
         }
 
         return "redirect:/admin/user_management";
+    }
+
+    @GetMapping("/user_management/update_password/{userId}")
+    public String displayUpdatePasswordForm(Model model, @PathVariable int userId) {
+        model.addAttribute(new )
     }
 
     @GetMapping("/user_management/delete/{userId}")
