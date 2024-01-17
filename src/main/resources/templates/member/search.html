@@ -9,31 +9,29 @@
     <!--bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Workflow Portal</title>
+    <title>Manager Portal</title>
     <style>
-    .search {
+    .search-box {
             text-align: right;
-        }
-        .create-button {
-            text-align: left;
         }
     </style>
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
-<div th:replace="~{fragments :: page-header}"></div>
+<header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
+        <li class="list-item">
+            <a th:href="@{/member}" class="btn btn-light">Cancel Search</a>
+        </li>
+    </ul>
+</header>
 <section id='page' class="container-md">
-    <h1>Workflow Portal</h1>
-    <br>
-    <div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2>In process Jobs</h2>
-            <form class="search" th:action="@{/member/job/search}" method="get">
-                <input type="text" placeholder="Product Name..." name="pName" id="pName" required>
-                <button type="submit">Search</button>
-            </form>
-        </div>
+    <h1 th:text="${'In Process Job List for ' + productName}">In Process Job List</h1>
+    <div class="search-box">
+        <form class="search" th:action="@{/member/job/search}" method="get">
+            <input type="text" th:value="${productName}" name="pName" id="pName" required>
+            <button type="submit">Search</button>
+        </form>
     </div>
-
     <table class="table table-striped table-hover table-condensed table-dark">
         <thead>
         <tr class="text-center">

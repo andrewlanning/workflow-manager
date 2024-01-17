@@ -40,6 +40,24 @@ public class MemberController {
         return "member/index";
     }
 
+    @GetMapping("/job/search")
+    public String searchInProcessJobs (@RequestParam(defaultValue = "") String pName, Model model ) {
+        List<Job> jobRepositoryAll = jobRepository.findByProductProductNameStartingWithIgnoreCase(pName);
+        List<Job> inProgressJobs = new ArrayList<>();
+
+        if (jobRepositoryAll != null) {
+            for (Job j : jobRepositoryAll) {
+                if (Boolean.FALSE.equals(j.getIsCompleted())) {
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
+        model.addAttribute("productName", pName);
+
+        return "/member/search";
+    }
+
     @GetMapping("/job/edit/{jobId}")
     public String displayEditProductForm(Model model, @PathVariable int jobId) {
         Optional<Job> jobById = jobRepository.findById(jobId);
