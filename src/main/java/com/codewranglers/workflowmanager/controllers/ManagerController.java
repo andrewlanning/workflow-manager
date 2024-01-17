@@ -73,6 +73,23 @@ public class ManagerController {
         model.addAttribute("jobs", inProgressJobs);
         return "/manager/index";
     }
+    @GetMapping("/job/search")
+    public String searchInProcessJobs (@RequestParam(defaultValue = "") String pName, Model model ) {
+        List<Job> jobRepositoryAll = jobRepository.findByProductProductNameStartingWithIgnoreCase(pName);
+        List<Job> inProgressJobs = new ArrayList<>();
+
+        if (jobRepositoryAll != null) {
+            for (Job j : jobRepositoryAll) {
+                if (Boolean.FALSE.equals(j.getIsCompleted())) {
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
+        model.addAttribute("productName", pName);
+
+        return "/manager/search";
+    }
 
     @GetMapping("/view-workforce")
     public String renderWorkforceTable(Model model) {
