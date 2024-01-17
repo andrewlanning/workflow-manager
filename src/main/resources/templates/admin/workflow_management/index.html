@@ -26,12 +26,7 @@
     <div id="dashboard" class="row">
         <div class="col-sm">
             <div class="option-container">
-                <a th:href="@{/manager/jobs/add}">Create New Job</a>
-            </div>
-            <div class="col-sm">
-                <div class="option-container">
-                    <a th:href="@{/manager/view-workforce}">View Workforce</a>
-                </div>
+                <a th:href="@{/admin/workflow_management/jobs/add}">Create New Job</a>
             </div>
         </div>
         <div class="col-sm">
@@ -41,12 +36,12 @@
         </div>
         <div class="col-sm">
             <div class="option-container">
-                <a th:href="@{/manager/product}">Products</a>
+                <a th:href="@{/admin/workflow_management/product}">Products</a>
             </div>
         </div>
         <div class="col-sm">
             <div class="option-container">
-                <a th:href="@{/manager/jobs/completed_jobs}">Completed Jobs</a>
+                <a th:href="@{/admin/workflow_management/jobs/completed_jobs}">Completed Jobs</a>
             </div>
         </div>
     </div>
@@ -67,7 +62,7 @@
         </thead>
         <tbody>
         <tr class="text-center" th:each="job : ${jobs}">
-            <td> <a th:href="@{/manager/jobs/edit/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
+            <td> <a th:href="@{/admin/workflow_management/jobs/edit/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
             <td th:text="${job.product.productName}"></td>
             <td th:text="${job.quantity}"></td>
             <td th:text="${job.lot.lotNumber}"></td>

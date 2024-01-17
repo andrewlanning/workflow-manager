@@ -10,13 +10,13 @@
 <header class="container-md header-section" style="padding-top:0.5rem; padding-bottom:0.5rem;">
     <ul class="list" style="list-style:none; display:flex; justify-content:space-between; padding:0; margin: 0;">
         <li class="list-item">
-            <a th:href="@{/manager/product}" class="btn btn-light">Products</a>
+            <a th:href="@{/admin/workflow_management/product/edit/{productId}(productId=${productId})}" class="btn btn-light">Back</a>
         </li>
     </ul>
 </header>
 <section id="page" class="container-md">
     <h1 th:text="${'Steps List for ' + productName}">Steps List</h1>
-    <a th:href="@{/manager/product/operation/product_id/{productId}/add(productId=${productId})}" class="btn btn-primary create">Create New Step</a>
+    <a th:href="@{/admin/workflow_management/product/operation/product_id/{productId}/add(productId=${productId})}" class="btn btn-primary create">Create New Step</a>
     <table class="table table-striped table-content table-dark">
         <thead>
         <tr class="text-center">
@@ -26,7 +26,7 @@
         </thead>
         <tbody>
         <tr class="text-center" th:each="operation : ${operations}">
-            <td> <a th:href="@{/manager/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" th:text="${operation.opName}"></a></td>
+            <td> <a th:href="@{/admin/workflow_management/product/operation/product_id/{productId}/edit/operation_id/{operationId}(productId=${productId}, operationId=${operation.operationId})}" th:text="${operation.opName}"></a></td>
             <td th:text="${operation.opText}"></td>
         </tr>
         </tbody>
