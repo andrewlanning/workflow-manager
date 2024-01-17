@@ -8,9 +8,14 @@
               integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace; height: 100vh; display: flex; align-items: center; justify-content: center;">
-<h1>You are not authorized to access this part of the application. Go back or Log out.</h1>
-<br>
-<button type="button" onclick="history.back()" class="btn btn-primary" style="margin-top:1rem">Go Back</button>
-<a href="/logout"><button type="button" class="btn btn-primary" style="margin-top:1rem">Log Out</button></a>
+    <section class="container">
+        <div class="option-container" style="text-align:center;">
+            <p>You are not authorized to access this part of the application.</p>
+            <div class="button-holder">
+                <button type="button" onclick="history.back()" class="btn btn-primary" style="margin-top:1rem">Go Back</button>
+                <a href="/logout"><button type="button" class="btn btn-primary" style="margin-top:1rem">Log Out</button></a>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

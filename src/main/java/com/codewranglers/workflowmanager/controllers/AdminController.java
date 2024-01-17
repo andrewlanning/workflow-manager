@@ -6,9 +6,11 @@ import com.codewranglers.workflowmanager.models.data.*;
 import com.codewranglers.workflowmanager.models.dto.CreateUserDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.codewranglers.workflowmanager.models.dto.UpdatePasswordDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -48,6 +50,8 @@ public class AdminController {
 
 
     int productId;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @GetMapping("")
     public String renderAdminPortal(Model model) {
@@ -92,7 +96,7 @@ public class AdminController {
     }
 
     @GetMapping("/user_management/create_user")
-    public String renderUserCreationPortal(Model model, HttpSession session) {
+    public String renderUserCreationPortal(Model model) {
         model.addAttribute(new CreateUserDTO());
         return "admin/user_management/create_user";
     }
@@ -157,6 +161,43 @@ public class AdminController {
             return "admin/user_management/edit";
         }
 
+        return "redirect:/admin/user_management";
+    }
+
+    @GetMapping("/user_management/update_password/{userId}")
+    public String displayUpdatePasswordForm(Model model, @PathVariable int userId) {
+        model.addAttribute(new UpdatePasswordDTO());
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            model.addAttribute("user", user);
+            return "admin/user_management/update_password";
+        } else {
+            return "redirect:admin/user_management";
+        }
+    }
+
+    @PostMapping("/user_management/update_password/{userId}")
+    public String processUpdatePasswordForm(@PathVariable int userId,
+                                            @ModelAttribute @Valid UpdatePasswordDTO updatePasswordDTO,
+                                            Errors errors) {
+        if (errors.hasErrors()) {
+            return ("redirect:/admin/user_management/update_password/" + userId);
+        }
+
+        String password = updatePasswordDTO.getPassword();
+        String confirmPassword = updatePasswordDTO.getConfirmPassword();
+        if (!password.equals(confirmPassword)) {
+            errors.rejectValue("password", "password.mismatch", "Passwords do not match.");
+            return ("redirect:/admin/user_management/update_password/" + userId);
+        }
+
+        Optional<User> optUser = userRepository.findById(userId);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            user.setPwhash(encoder.encode(password));
+            userRepository.save(user);
+        }
         return "redirect:/admin/user_management";
     }
 

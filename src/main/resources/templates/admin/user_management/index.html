@@ -39,6 +39,9 @@
                 <a th:href="@{/admin/user_management/edit/{userId}(userId=${user.key.id})}">Edit</a>
             </td>
             <td>
+                <a th:href="@{/admin/user_management/update_password/{userId}(userId=${user.key.id})}">Update Password</a>
+            </td>
+            <td>
                 <a th:href="@{/admin/user_management/delete/{userId}(userId=${user.key.id})}"
                    onclick="return confirm('Are you sure you want to Delete this User?')">Delete</a>
             </td>
