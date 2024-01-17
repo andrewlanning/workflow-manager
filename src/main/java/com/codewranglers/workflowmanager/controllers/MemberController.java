@@ -51,7 +51,7 @@ public class MemberController {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
                 model.addAttribute("isCompleted", job.getIsCompleted());
-                return "/jobs/job_edit_member";
+                return "/jobs/member/job_edit_member";
             }
         } else {
             return "/redirect:/member/job/edit";
@@ -87,7 +87,7 @@ public class MemberController {
             List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
             model.addAttribute("steps", byproductProductId);
             model.addAttribute("job", job);
-            return "/jobs/job_edit_step_member";
+            return "/jobs/member/job_edit_step_member";
         } else {
             return "/job/edit_step/job_id/{jobId}";
         }
