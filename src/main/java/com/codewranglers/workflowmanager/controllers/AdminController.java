@@ -78,6 +78,7 @@ public class AdminController {
     public String renderUserManagementPortal(Model model) {
         Iterable<User> users = userRepository.findAll();
 
+        // Using Map with key as User and Value as Role to show Role name on user index page.
         Map<User, String> userMap = new LinkedHashMap<>();
 
         for (User user : users) {
@@ -93,6 +94,29 @@ public class AdminController {
         }
         model.addAttribute("users", userMap);
         return "admin/user_management/index";
+    }
+
+    @GetMapping("/user_management/search")
+    public String searchUser(@RequestParam(defaultValue = "") String fName, Model model){
+        List<User> userList = userRepository.findByFirstnameStartingWithIgnoreCase(fName);
+
+        // Using Map with key as User and Value as Role to show Role name on user index page.
+        Map<User, String> userMap = new LinkedHashMap<>();
+
+        for (User user : userList) {
+            if (user.getRole() == 1) {
+                userMap.put(user, "Manager");
+            }
+            if (user.getRole() == 2) {
+                userMap.put(user, "Member");
+            }
+            if (user.getRole() == 3) {
+                userMap.put(user, "Administrator");
+            }
+        }
+        model.addAttribute("FirstName", fName);
+        model.addAttribute("users", userMap);
+        return "admin/user_management/search_user";
     }
 
     @GetMapping("/user_management/create_user")
