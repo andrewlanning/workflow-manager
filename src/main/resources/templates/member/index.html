@@ -15,7 +15,16 @@
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
 <div th:replace="~{fragments :: page-header}"></div>
+
 <section id='page' class="container-md">
+    <div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <form class="search" th:action="@{/member/job/search}" method="get">
+                <input type="text" placeholder="Product Name..." name="pName" id="pName" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
     <h1>Member Portal</h1>
     <br>
     <h2>Active Jobs</h2>
