@@ -26,8 +26,10 @@ public class Operation {
 
     @Column(name = "op_name")
     private String opName;
+
     @Column(name = "op_number")
     private int opNumber;
+
     @Column(name = "op_text")
     private String opText;
 

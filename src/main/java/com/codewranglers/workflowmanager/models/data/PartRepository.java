@@ -10,4 +10,6 @@ import java.util.List;
 public interface PartRepository extends CrudRepository<Part, Integer> {
 
     List<Part> findByproductProductId(int productId);
+
+    List<Part> findByjobJobId(int jobId);
 }

@@ -48,7 +48,7 @@ public class Job {
     private Lot lot; // Automatically generated upon object creation
 
     @Column(name = "is_complete")
-    private Boolean isCompleted; // When process is exhausted: True
+    private Boolean isComplete; // When process is exhausted: True
 
     @CreatedDate
     @Column(name = "start_date")
@@ -101,11 +101,11 @@ public class Job {
     }
 
     public Boolean getIsCompleted() {
-        return isCompleted;
+        return isComplete;
     }
 
-    public void setIsCompleted(Boolean isCompleted) {
-        this.isCompleted = isCompleted;
+    public void setIsCompleted(Boolean isComplete) {
+        this.isComplete = isComplete;
     }
 
     public LocalDate getStartDate() {
@@ -128,8 +128,8 @@ public class Job {
         return completionDate;
     }
 
-    public void setCompletionDate(LocalDate completaionDate) {
-        this.completionDate = completaionDate;
+    public void setCompletionDate(LocalDate completionDate) {
+        this.completionDate = completionDate;
     }
 
     public String getWorkOrderNumber() {
@@ -147,6 +147,8 @@ public class Job {
     public void setCurrentStep(int currentStep) {
         this.currentStep = currentStep;
     }
+
+    public void setComplete(boolean complete) { this.isComplete = complete; }
 
 }
 
