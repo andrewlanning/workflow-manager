@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface JobRepository extends CrudRepository<Job, Integer> {
-
+    List<Job> findByIsCompleteFalse();
     List<Job> findByProductProductNameStartingWithIgnoreCase (String pName);
 }
