@@ -35,7 +35,6 @@ public class ManagerController {
     private LotRepository lotRepository;
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -122,7 +121,6 @@ public class ManagerController {
         operationRepository.save(operation);
         return "redirect:/manager/product/operation/product_id/{productId}";
     }
-
 
     @GetMapping("/product/operation/product_id/{productId}/edit/operation_id/{operationId}")
     public String displayEditOperationForm(Model model, @PathVariable int operationId, @PathVariable int productId) {
