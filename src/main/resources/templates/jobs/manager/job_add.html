@@ -16,6 +16,9 @@
 </header>
 <section class="container">
     <h1>Job Creation Portal</h1>
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <p th:text="${error}"></p>
+    </div>
     <form th:action="@{/manager/jobs/add}" method="post" th:object="${job}">
         <div class="form-group">
             <label for="productName">Select Product:</label>
