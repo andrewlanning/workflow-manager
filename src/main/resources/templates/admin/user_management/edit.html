@@ -8,7 +8,6 @@
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
 
-<div th:replace="fragments :: page-header"></div>
 <div class="container">
     <h1>Edit User</h1>
     <form th:action="@{/admin/user_management/edit/{userId}(userId=${user.id})}" method="post" th:object="${user}">

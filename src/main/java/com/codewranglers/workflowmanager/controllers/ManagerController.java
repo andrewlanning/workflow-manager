@@ -485,19 +485,6 @@ public class ManagerController {
         }
         return "redirect:/manager";
     }
-
-    @GetMapping("/view_parts")
-    private String getAllParts(Model model) {
-        model.addAttribute("parts", partRepository.findAll());
-        return "parts/manager/index";
-    }
-
-    @GetMapping("/view_lots")
-    private String getAlllots(Model model) {
-        model.addAttribute("lots", lotRepository.findAll());
-        return "lots/manager/index";
-    }
-
     private String createWONumber() {
         Iterable<Job> jobs = jobRepository.findAll();
         int woNumber = 0;
