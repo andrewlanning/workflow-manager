@@ -357,13 +357,27 @@ public class ManagerController {
     public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
+            model.addAttribute("products", productRepository.findAll());
             return "/jobs/manager/job_add";
         }
+
+        // Fetch operations for the selected product
+        List<Operation> productOperations = operationRepository.findByproductProductId(newJob.getProduct().getProductId());
+        // Check if the product has operations
+        if (productOperations.isEmpty()) {
+            // Product doesn't have any operations, return an error message
+            model.addAttribute("title", "Add Job");
+            model.addAttribute("error", "Selected product must have operations to create a job");
+            model.addAttribute("products", productRepository.findAll());
+            return "/jobs/manager/job_add";
+        }
+
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
         newJob.setLot(lot);
         newJob.setIsCompleted(Boolean.FALSE);
         newJob.setStartDate(LocalDate.now());
+        newJob.setCurrentStep(1);
 
         Job job = jobRepository.save(newJob);
 
