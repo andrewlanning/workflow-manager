@@ -78,6 +78,7 @@ public class AdminController {
     public String renderUserManagementPortal(Model model) {
         Iterable<User> users = userRepository.findAll();
 
+        // Using Map with key as User and Value as Role to show Role name on user index page.
         Map<User, String> userMap = new LinkedHashMap<>();
 
         for (User user : users) {
@@ -93,6 +94,29 @@ public class AdminController {
         }
         model.addAttribute("users", userMap);
         return "admin/user_management/index";
+    }
+
+    @GetMapping("/user_management/search")
+    public String searchUser(@RequestParam(defaultValue = "") String fName, Model model){
+        List<User> userList = userRepository.findByFirstnameStartingWithIgnoreCase(fName);
+
+        // Using Map with key as User and Value as Role to show Role name on user index page.
+        Map<User, String> userMap = new LinkedHashMap<>();
+
+        for (User user : userList) {
+            if (user.getRole() == 1) {
+                userMap.put(user, "Manager");
+            }
+            if (user.getRole() == 2) {
+                userMap.put(user, "Member");
+            }
+            if (user.getRole() == 3) {
+                userMap.put(user, "Administrator");
+            }
+        }
+        model.addAttribute("FirstName", fName);
+        model.addAttribute("users", userMap);
+        return "admin/user_management/search_user";
     }
 
     @GetMapping("/user_management/create_user")
@@ -228,6 +252,24 @@ public class AdminController {
         return "/admin/workflow_management/index";
     }
 
+    @GetMapping("/workflow_management/job/search")
+    public String searchInProcessJobs (@RequestParam(defaultValue = "") String pName, Model model ) {
+        List<Job> jobRepositoryAll = jobRepository.findByProductProductNameStartingWithIgnoreCase(pName);
+        List<Job> inProgressJobs = new ArrayList<>();
+
+        if (jobRepositoryAll != null) {
+            for (Job j : jobRepositoryAll) {
+                if (Boolean.FALSE.equals(j.getIsCompleted())) {
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
+        model.addAttribute("productName", pName);
+
+        return "/admin/workflow_management/search";
+    }
+
     @GetMapping("/workflow_management/product/operation/product_id/{productId}")
     public String renderOperationPortal(Model model, @PathVariable int productId) {
         String productName = productRepository.findById(productId).get().getProductName();
@@ -333,6 +375,40 @@ public class AdminController {
 
         model.addAttribute("products", finalMap);
         return "/product/admin/index";
+    }
+
+    @GetMapping("/workflow_management/product/search")
+    public String searchProduct(@RequestParam(defaultValue = "") String pName, Model model){
+        // Using Map with key Product and Value total steps to show total steps on index page
+        Map<Product, Integer> finalMap = new LinkedHashMap<>();
+
+        int counter;
+
+        List<Product> products = productRepository.findByProductNameStartingWithIgnoreCase(pName);
+
+        for (Product p : products) {
+            counter = 0;
+
+            List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+
+            if (!operations.isEmpty()) {
+
+                for (Operation o : operations) {
+
+                    if (o != null) {
+                        counter++;
+                    } else {
+                        counter = 0;
+                    }
+                }
+            }
+
+            finalMap.put(p, counter);
+        }
+
+        model.addAttribute("productName", pName);
+        model.addAttribute("products", finalMap);
+        return "product/admin/search";
     }
 
     @GetMapping("/workflow_management/product/add")
@@ -455,13 +531,28 @@ public class AdminController {
     public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
+            model.addAttribute("products", productRepository.findAll());
             return "/jobs/admin/job_add";
         }
+
+        // Fetch operations for the selected product
+        List<Operation> productOperations = operationRepository.findByproductProductId(newJob.getProduct().getProductId());
+
+        // Check if the product has operations
+        if (productOperations.isEmpty()) {
+            // Product doesn't have any operations, return an error message
+            model.addAttribute("title", "Add Job");
+            model.addAttribute("error", "Selected product must have operations to create a job");
+            model.addAttribute("products", productRepository.findAll());
+            return "/jobs/admin/job_add";
+        }
+
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
         newJob.setLot(lot);
         newJob.setIsCompleted(Boolean.FALSE);
         newJob.setStartDate(LocalDate.now());
+        newJob.setCurrentStep(productOperations.get(0).getOperationId());
 
         Job job = jobRepository.save(newJob);
 

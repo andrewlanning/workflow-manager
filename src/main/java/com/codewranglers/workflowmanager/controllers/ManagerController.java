@@ -18,6 +18,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -35,30 +36,21 @@ public class ManagerController {
     private LotRepository lotRepository;
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PartRepository partRepository;
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private NCRRepository ncrRepository;
 
     int productId;
 
     @GetMapping("")
     public String renderManagerPortal(Model model) {
-        List<String> pages = new ArrayList<>();
-        pages.add("Jobs");
-        pages.add("Products");
-        pages.add("Operations");
-
-        List<String> urlStrings = new ArrayList<>();
-        urlStrings.add("jobs");
-        urlStrings.add("product");
-        urlStrings.add("operation");
-
-        model.addAttribute("pages", pages);
-        model.addAttribute("url", urlStrings);
+        List<NCR> undispositionedNCRs = ncrRepository.findByIsDispositionedFalse();
+        model.addAttribute("undispositionedNCRs", undispositionedNCRs);
 
         Iterable<Job> jobRepositoryAll = jobRepository.findAll();
         List<Job> inProgressJobs = new ArrayList<>();
@@ -72,6 +64,64 @@ public class ManagerController {
         }
         model.addAttribute("jobs", inProgressJobs);
         return "/manager/index";
+    }
+
+    @GetMapping("/ncr/{ncrId}")
+    public String showNcrDispositionForm(@PathVariable Integer ncrId, Model model) {
+        NCR ncr = ncrRepository.findById(ncrId).orElse(null);
+        String ncrDescription = ncr.getNcrDescription();
+        Part part = ncr.getNcrPart();
+        String partNumber = part.getSerNum();
+
+        model.addAttribute("ncr", ncr);
+        model.addAttribute("ncrId", ncrId);
+        model.addAttribute("ncrDescription", ncrDescription);
+        model.addAttribute("partNumber", partNumber);
+
+        System.out.println(ncrId);
+        return "manager/ncr/disposition_ncr";
+    }
+
+    @PostMapping("/ncr/submit_disposition")
+    public String submitNCR(@RequestParam int ncrId,
+                            @RequestParam String dispositionName,
+                            @RequestParam String dispositionText) {
+
+        System.out.println(ncrId);
+
+        NCR activeNcr = ncrRepository.findById(ncrId).orElse(null);
+
+        if (activeNcr != null) {
+            activeNcr.setNcrReviewer(null); // TODO: Get with Luke
+            activeNcr.setNcrTitle(dispositionName);
+            activeNcr.setNcrDispositionText(dispositionText);
+            activeNcr.setComplete(true);
+            activeNcr.setDispositioned(true);
+            ncrRepository.save(activeNcr);
+
+            return "redirect:/manager";
+        } else {
+            // In the event that ncr is not found. There will probably be other errors before this point.
+            return "redirect:/manager";
+        }
+    }
+
+    @GetMapping("/job/search")
+    public String searchInProcessJobs (@RequestParam(defaultValue = "") String pName, Model model ) {
+        List<Job> jobRepositoryAll = jobRepository.findByProductProductNameStartingWithIgnoreCase(pName);
+        List<Job> inProgressJobs = new ArrayList<>();
+
+        if (jobRepositoryAll != null) {
+            for (Job j : jobRepositoryAll) {
+                if (Boolean.FALSE.equals(j.getIsCompleted())) {
+                    inProgressJobs.add(j);
+                }
+            }
+        }
+        model.addAttribute("jobs", inProgressJobs);
+        model.addAttribute("productName", pName);
+
+        return "/manager/search";
     }
 
     @GetMapping("/view-workforce")
@@ -105,7 +155,6 @@ public class ManagerController {
         operationRepository.save(operation);
         return "redirect:/manager/product/operation/product_id/{productId}";
     }
-
 
     @GetMapping("/product/operation/product_id/{productId}/edit/operation_id/{operationId}")
     public String displayEditOperationForm(Model model, @PathVariable int operationId, @PathVariable int productId) {
@@ -186,6 +235,40 @@ public class ManagerController {
 
         model.addAttribute("products", finalMap);
         return "/product/manager/index";
+    }
+
+    @GetMapping("/product/search")
+    public String searchProduct(@RequestParam(defaultValue = "") String pName, Model model){
+        // Using Map with key Product and Value total steps to show total steps on index page
+        Map<Product, Integer> finalMap = new LinkedHashMap<>();
+
+        int counter;
+
+        List<Product> products = productRepository.findByProductNameStartingWithIgnoreCase(pName);
+
+        for (Product p : products) {
+            counter = 0;
+
+            List<Operation> operations = operationRepository.findByproductProductId(p.getProductId());
+
+            if (!operations.isEmpty()) {
+
+                for (Operation o : operations) {
+
+                    if (o != null) {
+                        counter++;
+                    } else {
+                        counter = 0;
+                    }
+                }
+            }
+
+            finalMap.put(p, counter);
+        }
+
+        model.addAttribute("productName", pName);
+        model.addAttribute("products", finalMap);
+        return "product/manager/search";
     }
 
     @GetMapping("/product/add")
@@ -308,13 +391,27 @@ public class ManagerController {
     public String processAddJobForm(@ModelAttribute("job") Job newJob, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
+            model.addAttribute("products", productRepository.findAll());
             return "/jobs/manager/job_add";
         }
+
+        // Fetch operations for the selected product
+        List<Operation> productOperations = operationRepository.findByproductProductId(newJob.getProduct().getProductId());
+        // Check if the product has operations
+        if (productOperations.isEmpty()) {
+            // Product doesn't have any operations, return an error message
+            model.addAttribute("title", "Add Job");
+            model.addAttribute("error", "Selected product must have operations to create a job");
+            model.addAttribute("products", productRepository.findAll());
+            return "/jobs/manager/job_add";
+        }
+
         newJob.setWorkOrderNumber(createWONumber());
         Lot lot = createLotNumber(newJob.getProduct().getProductId());
         newJob.setLot(lot);
         newJob.setIsCompleted(Boolean.FALSE);
         newJob.setStartDate(LocalDate.now());
+        newJob.setCurrentStep(1);
 
         Job job = jobRepository.save(newJob);
 

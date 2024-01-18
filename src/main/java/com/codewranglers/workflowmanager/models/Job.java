@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 /*
  * This class provides the model for each Job.
@@ -16,9 +14,11 @@ import java.util.List;
  * Each lot within that job will have a number of parts defined by part quantity.
  *
  * Limitations?
- * No date created at the moment.
+ * TBD
  *
  * Created by Andrew Lanning 12-06-23
+ * Additional code by Muhammad Qayyum
+ *
  */
 
 @Entity
@@ -34,7 +34,7 @@ public class Job {
     private String workOrderNumber; // ie: WO1234
 
     @Column(name = "current_step")
-    private int currentStep; // ie: 001 ultimately appended to workOrderNumber ie WO1234.001
+    private int currentStep; //TODO: would ultimately be appended to workOrderNumber ie WO1234.001
 
     @Column(name = "quantity")
     private int quantity;
@@ -48,7 +48,7 @@ public class Job {
     private Lot lot; // Automatically generated upon object creation
 
     @Column(name = "is_complete")
-    private Boolean isCompleted; // When process is exhausted: True
+    private Boolean isComplete; // When process is exhausted: True
 
     @CreatedDate
     @Column(name = "start_date")
@@ -101,11 +101,11 @@ public class Job {
     }
 
     public Boolean getIsCompleted() {
-        return isCompleted;
+        return isComplete;
     }
 
-    public void setIsCompleted(Boolean isCompleted) {
-        this.isCompleted = isCompleted;
+    public void setIsCompleted(Boolean isComplete) {
+        this.isComplete = isComplete;
     }
 
     public LocalDate getStartDate() {
@@ -128,8 +128,8 @@ public class Job {
         return completionDate;
     }
 
-    public void setCompletionDate(LocalDate completaionDate) {
-        this.completionDate = completaionDate;
+    public void setCompletionDate(LocalDate completionDate) {
+        this.completionDate = completionDate;
     }
 
     public String getWorkOrderNumber() {
@@ -147,6 +147,8 @@ public class Job {
     public void setCurrentStep(int currentStep) {
         this.currentStep = currentStep;
     }
+
+    public void setComplete(boolean complete) { this.isComplete = complete; }
 
 }
 

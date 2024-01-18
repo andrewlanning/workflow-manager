@@ -9,56 +9,82 @@ public class NCR {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ncrId;
 
-    @ManyToOne
-    @JoinColumn(name = "ncrGenerator_id")
-    private User ncrGenerator;
-
+    @Column(name = "ncr_title")
     private String ncrTitle;
 
+    @Column(name = "ncr_description")
+    private String ncrDescription;
+
     @ManyToOne
-    @JoinColumn(name = "ncrPart_id")
+    @JoinColumn(name = "ncr_user_id")
+    private User ncrUserId;
+
+    @ManyToOne
+    @JoinColumn(name = "ncr_part_id")
     private Part ncrPart;
 
     @ManyToOne
-    @JoinColumn(name = "ncrReviewer_id")
+    @JoinColumn(name = "ncr_reviewer_id")
     private User ncrReviewer;
 
+    @Column(name = "ncr_disposition_name")
+    private String dispositionName;
+
+    @Column(name = "ncr_disposition_text")
     private String ncrDispositionText;
 
+    @Column(name = "is_dispositioned")
+    private boolean isDispositioned;
+
+    @Column(name = "is_complete")
     private boolean isComplete;
 
+    @Column(name = "is_passing")
     private boolean isPassing;
 
+    @Column(name = "is_scrap")
     private boolean isScrap;
 
+    @Column(name = "needs_rework")
     private boolean needsRework;
 
-    @Override
-    public String toString() {
-        return "NCR{" +
-                "ncrId=" + ncrId +
-                ", ncrGenerator=" + ncrGenerator +
-                ", ncrTitle='" + ncrTitle + '\'' +
-                ", ncrPart=" + ncrPart +
-                ", ncrReviewer=" + ncrReviewer +
-                ", ncrDispositionText='" + ncrDispositionText + '\'' +
-                ", isComplete=" + isComplete +
-                ", isPassing=" + isPassing +
-                ", isScrap=" + isScrap +
-                ", needsRework=" + needsRework +
-                '}';
+    public void setNcrDescription(String ncrDescription) {
+        this.ncrDescription = ncrDescription;
+    }
+
+    public NCR() {
+    }
+
+    public String getNcrDescription() {
+        return ncrDescription;
+    }
+
+    public String getDispositionName() {
+        return dispositionName;
+    }
+
+    public void setDispositionName(String dispositionName) {
+        this.dispositionName = dispositionName;
+    }
+
+    public boolean isDispositioned() {
+        return isDispositioned;
+    }
+
+    public void setDispositioned(boolean dispositioned) {
+        isDispositioned = dispositioned;
     }
 
     public Integer getNcrId() {
         return ncrId;
     }
 
-    public User getNcrGenerator() {
-        return ncrGenerator;
+    public User getNcrUserId() {
+        return ncrUserId;
     }
 
-    public void setNcrGenerator(User ncrGenerator) {
-        this.ncrGenerator = ncrGenerator;
+    public void setNcrUserId(User ncrUserId) {
+        this.ncrUserId = ncrUserId;
     }
 
     public String getNcrTitle() {
