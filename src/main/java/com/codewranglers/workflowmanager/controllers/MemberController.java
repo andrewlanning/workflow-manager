@@ -114,7 +114,6 @@ public class MemberController {
 
             redirectAttributes.addAttribute("jobId", jobId);
 
-            // Use the 'redirect:' prefix with URL template and path variables
             return "redirect:/member/job/{jobId}";
         } else {
             // In the event that job/part is not found. There will probably be other errors before this point.

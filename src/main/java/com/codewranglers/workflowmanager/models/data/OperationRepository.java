@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface OperationRepository extends CrudRepository<Operation, Integer> {
-
     List<Operation> findByproductProductId(int productId);
 }

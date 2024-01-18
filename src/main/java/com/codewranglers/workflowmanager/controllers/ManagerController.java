@@ -18,6 +18,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -41,23 +42,15 @@ public class ManagerController {
     private PartRepository partRepository;
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private NCRRepository ncrRepository;
 
     int productId;
 
     @GetMapping("")
     public String renderManagerPortal(Model model) {
-        List<String> pages = new ArrayList<>();
-        pages.add("Jobs");
-        pages.add("Products");
-        pages.add("Operations");
-
-        List<String> urlStrings = new ArrayList<>();
-        urlStrings.add("jobs");
-        urlStrings.add("product");
-        urlStrings.add("operation");
-
-        model.addAttribute("pages", pages);
-        model.addAttribute("url", urlStrings);
+        List<NCR> undispositionedNCRs = ncrRepository.findByIsDispositionedFalse();
+        model.addAttribute("undispositionedNCRs", undispositionedNCRs);
 
         Iterable<Job> jobRepositoryAll = jobRepository.findAll();
         List<Job> inProgressJobs = new ArrayList<>();
@@ -72,6 +65,47 @@ public class ManagerController {
         model.addAttribute("jobs", inProgressJobs);
         return "/manager/index";
     }
+
+    @GetMapping("/ncr/{ncrId}")
+    public String showNcrDispositionForm(@PathVariable Integer ncrId, Model model) {
+        NCR ncr = ncrRepository.findById(ncrId).orElse(null);
+        String ncrDescription = ncr.getNcrDescription();
+        Part part = ncr.getNcrPart();
+        String partNumber = part.getSerNum();
+
+        model.addAttribute("ncr", ncr);
+        model.addAttribute("ncrId", ncrId);
+        model.addAttribute("ncrDescription", ncrDescription);
+        model.addAttribute("partNumber", partNumber);
+
+        System.out.println(ncrId);
+        return "manager/ncr/disposition_ncr";
+    }
+
+    @PostMapping("/ncr/submit_disposition")
+    public String submitNCR(@RequestParam int ncrId,
+                            @RequestParam String dispositionName,
+                            @RequestParam String dispositionText) {
+
+        System.out.println(ncrId);
+
+        NCR activeNcr = ncrRepository.findById(ncrId).orElse(null);
+
+        if (activeNcr != null) {
+            activeNcr.setNcrReviewer(null); // TODO: Get with Luke
+            activeNcr.setNcrTitle(dispositionName);
+            activeNcr.setNcrDispositionText(dispositionText);
+            activeNcr.setComplete(true);
+            activeNcr.setDispositioned(true);
+            ncrRepository.save(activeNcr);
+
+            return "redirect:/manager";
+        } else {
+            // In the event that ncr is not found. There will probably be other errors before this point.
+            return "redirect:/manager";
+        }
+    }
+
     @GetMapping("/job/search")
     public String searchInProcessJobs (@RequestParam(defaultValue = "") String pName, Model model ) {
         List<Job> jobRepositoryAll = jobRepository.findByProductProductNameStartingWithIgnoreCase(pName);

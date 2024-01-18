@@ -58,30 +58,6 @@
     </th:block>
 </section>
 <br><br>
-<section id='page' class="container-md">
-    <h2>Dispositioned NCRs</h2>
-    <th:block th:if="${not #lists.isEmpty(dispositionedNCRs)}">
-        <table class="table table-striped table-hover table-condensed table-dark">
-            <thead>
-            <tr>
-                <th>NCR Number</th>
-                <th>NCR Title</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="ncr : ${dispositionedNCRs}">
-                <td th:text="${ncr.ncrTitle}"></td>
-                <td th:text="${ncr.ncrDescription}"></td>
-                <td><a th:href="@{/ncr/{ncrId}(ncrId=${ncr.ncrId})}">Review</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </th:block>
-    <th:block th:if="${#lists.isEmpty(dispositionedNCRs)}">
-        <p>No NCRs to Review</p>
-    </th:block>
-</section>
+
 </body>
 </html>
