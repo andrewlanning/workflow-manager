@@ -46,7 +46,7 @@
         </thead>
         <tbody>
         <tr class="text-center" th:each="job : ${jobs}">
-            <td> <a th:href="@{/member/job/edit/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
+            <td> <a th:href="@{/member/job/{jobId}(jobId=${job.jobId})}" th:text="${job.workOrderNumber}" ></a></td>
             <td th:text="${job.product.productName}"></td>
             <td th:text="${job.quantity}"></td>
             <td th:text="${job.lot.lotNumber}"></td>
