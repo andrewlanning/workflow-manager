@@ -63,7 +63,7 @@ public class ManagerController {
             }
         }
         model.addAttribute("jobs", inProgressJobs);
-        return "/manager/index";
+        return "manager/index";
     }
 
     @GetMapping("/ncr/{ncrId}")
@@ -121,13 +121,13 @@ public class ManagerController {
         model.addAttribute("jobs", inProgressJobs);
         model.addAttribute("productName", pName);
 
-        return "/manager/search";
+        return "manager/search";
     }
 
     @GetMapping("/view-workforce")
     public String renderWorkforceTable(Model model) {
         model.addAttribute("users", userRepository.findAll());
-        return "/manager/view-workforce";
+        return "manager/view-workforce";
     }
 
     @GetMapping("/product/operation/product_id/{productId}")
@@ -136,7 +136,7 @@ public class ManagerController {
         model.addAttribute("productName", productName);
         model.addAttribute("operations", operationRepository.findByproductProductId(productId));
         this.productId=productId;
-        return "/operation/manager/index";
+        return "operation/manager/index";
     }
 
     @GetMapping("/product/operation/product_id/{productId}/add")
@@ -145,7 +145,7 @@ public class ManagerController {
         model.addAttribute("productName", productName);
         model.addAttribute("productId", this.productId);
         model.addAttribute("operations", new Operation());
-        return "/operation/manager/create_operation";
+        return "operation/manager/create_operation";
     }
 
     @PostMapping("/product/operation/product_id/{productId}/add")
@@ -167,7 +167,7 @@ public class ManagerController {
             Operation operation = operationById.get();
             model.addAttribute("operation", operation);
             model.addAttribute("products", productRepository.findAll());
-            return "/operation/manager/edit";
+            return "operation/manager/edit";
         } else {
             return "redirect:/manager/product/operation/product_id/{productId}";
         }
@@ -181,7 +181,7 @@ public class ManagerController {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Edit Operation");
-            return "/operation/manager/edit";
+            return "operation/manager/edit";
         }
 
         Optional<Operation> operationById = operationRepository.findById(operationId);
@@ -234,7 +234,7 @@ public class ManagerController {
         }
 
         model.addAttribute("products", finalMap);
-        return "/product/manager/index";
+        return "product/manager/index";
     }
 
     @GetMapping("/product/search")
@@ -274,7 +274,7 @@ public class ManagerController {
     @GetMapping("/product/add")
     public String renderProductCreationPortal(Model model) {
         model.addAttribute("product", new Product());
-        return "/product/manager/create_product";
+        return "product/manager/create_product";
     }
 
     @PostMapping("/product/add")
@@ -304,7 +304,7 @@ public class ManagerController {
             Product product = productById.get();
             model.addAttribute("title", "Edit Product");
             model.addAttribute("product", product);
-            return "/product/manager/edit";
+            return "product/manager/edit";
         } else {
             return "redirect:/product/edit";
         }
@@ -392,7 +392,7 @@ public class ManagerController {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             model.addAttribute("products", productRepository.findAll());
-            return "/jobs/manager/job_add";
+            return "jobs/manager/job_add";
         }
 
         // Fetch operations for the selected product
@@ -403,7 +403,7 @@ public class ManagerController {
             model.addAttribute("title", "Add Job");
             model.addAttribute("error", "Selected product must have operations to create a job");
             model.addAttribute("products", productRepository.findAll());
-            return "/jobs/manager/job_add";
+            return "jobs/manager/job_add";
         }
 
         newJob.setWorkOrderNumber(createWONumber());
@@ -427,9 +427,9 @@ public class ManagerController {
             List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
             model.addAttribute("steps", byproductProductId);
             model.addAttribute("job", job);
-            return "/jobs/manager/job_edit_step";
+            return "jobs/manager/job_edit_step";
         } else {
-            return "/jobs/manager/edit_step/job_id/{jobId}";
+            return "jobs/manager/edit_step/job_id/{jobId}";
         }
     }
 
@@ -458,7 +458,7 @@ public class ManagerController {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
                 model.addAttribute("isCompleted", job.getIsCompleted());
-                return "/jobs/manager/job_edit_manager";
+                return "jobs/manager/job_edit_manager";
             }
         } else {
             return "/redirect:/manager/jobs/edit";

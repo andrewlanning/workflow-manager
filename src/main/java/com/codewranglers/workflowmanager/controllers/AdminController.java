@@ -71,7 +71,7 @@ public class AdminController {
         model.addAttribute("pages", pages);
         model.addAttribute("user", user);
         model.addAttribute("url", urlStrings);
-        return "/admin/index";
+        return "admin/index";
     }
 
     @GetMapping("/user_management")
@@ -249,7 +249,7 @@ public class AdminController {
         }
         model.addAttribute("jobs", inProgressJobs);
 
-        return "/admin/workflow_management/index";
+        return "admin/workflow_management/index";
     }
 
     @GetMapping("/workflow_management/job/search")
@@ -267,7 +267,7 @@ public class AdminController {
         model.addAttribute("jobs", inProgressJobs);
         model.addAttribute("productName", pName);
 
-        return "/admin/workflow_management/search";
+        return "admin/workflow_management/search";
     }
 
     @GetMapping("/workflow_management/product/operation/product_id/{productId}")
@@ -276,7 +276,7 @@ public class AdminController {
         model.addAttribute("productName", productName);
         model.addAttribute("operations", operationRepository.findByproductProductId(productId));
         this.productId=productId;
-        return "/operation/admin/index";
+        return "operation/admin/index";
     }
 
     @GetMapping("/workflow_management/product/operation/product_id/{productId}/add")
@@ -285,7 +285,7 @@ public class AdminController {
         model.addAttribute("productName", productName);
         model.addAttribute("productId", this.productId);
         model.addAttribute("operations", new Operation());
-        return "/operation/admin/create_operation";
+        return "operation/admin/create_operation";
     }
 
     @PostMapping("/workflow_management/product/operation/product_id/{productId}/add")
@@ -307,7 +307,7 @@ public class AdminController {
             Operation operation = operationById.get();
             model.addAttribute("operation", operation);
             model.addAttribute("products", productRepository.findAll());
-            return "/operation/admin/edit";
+            return "operation/admin/edit";
         } else {
             return "redirect:/admin/workflow_management/product/operation/product_id/{productId}";
         }
@@ -321,7 +321,7 @@ public class AdminController {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Edit Operation");
-            return "/operation/manager/edit";
+            return "operation/manager/edit";
         }
 
         Optional<Operation> operationById = operationRepository.findById(operationId);
@@ -374,7 +374,7 @@ public class AdminController {
         }
 
         model.addAttribute("products", finalMap);
-        return "/product/admin/index";
+        return "product/admin/index";
     }
 
     @GetMapping("/workflow_management/product/search")
@@ -414,7 +414,7 @@ public class AdminController {
     @GetMapping("/workflow_management/product/add")
     public String renderProductCreationPortal(Model model) {
         model.addAttribute("product", new Product());
-        return "/product/admin/create_product";
+        return "product/admin/create_product";
     }
 
     @PostMapping("/workflow_management/product/add")
@@ -444,7 +444,7 @@ public class AdminController {
             Product product = productById.get();
             model.addAttribute("title", "Edit Product");
             model.addAttribute("product", product);
-            return "/product/admin/edit";
+            return "product/admin/edit";
         } else {
             return "redirect:/admin/workflow_management/product/edit";
         }
@@ -532,7 +532,7 @@ public class AdminController {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             model.addAttribute("products", productRepository.findAll());
-            return "/jobs/admin/job_add";
+            return "jobs/admin/job_add";
         }
 
         // Fetch operations for the selected product
@@ -544,7 +544,7 @@ public class AdminController {
             model.addAttribute("title", "Add Job");
             model.addAttribute("error", "Selected product must have operations to create a job");
             model.addAttribute("products", productRepository.findAll());
-            return "/jobs/admin/job_add";
+            return "jobs/admin/job_add";
         }
 
         newJob.setWorkOrderNumber(createWONumber());
@@ -568,9 +568,9 @@ public class AdminController {
             List<Operation> byproductProductId = operationRepository.findByproductProductId(job.getProduct().getProductId());
             model.addAttribute("steps", byproductProductId);
             model.addAttribute("job", job);
-            return "/jobs/admin/job_edit_step";
+            return "jobs/admin/job_edit_step";
         } else {
-            return "/jobs/admin/edit_step/job_id/{jobId}";
+            return "jobs/admin/edit_step/job_id/{jobId}";
         }
     }
 
@@ -599,7 +599,7 @@ public class AdminController {
                 model.addAttribute("job", job);
                 model.addAttribute("dueDate", job.getDueDate());
                 model.addAttribute("isCompleted", job.getIsCompleted());
-                return "/jobs/admin/job_edit";
+                return "jobs/admin/job_edit";
             }
         } else {
             return "/redirect:/admin/workflow_management/jobs/edit";
