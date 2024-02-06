@@ -19,18 +19,18 @@
     <h3 th:text="${job.product.productName}"></h3>
 </section>
 <br>
-<section  class="container-md">
+<section id='page' class="container-md">
     <h4 th:text="'Work Order Number: ' + ${job.workOrderNumber} + ' | Current Step: ' + ${job.currentStep} + ' | Quantity: ' + ${job.quantity}"></h4>
 </section>
 <br><br>
-<section  class="container-md">
+<section id='page' class="container-md">
     <h3>Current Operation</h3>
     <br>
     <h4 th:text="${currentOperation.opName}"></h4>
     <p th:utext="${currentOperation.opText}"></p>
 </section>
 
-<section  class="container-md">
+<section id='page' class="container-md">
     <a class="btn btn-light" type="button" th:href="@{/member}">Sign Off</a>
     <a class="btn btn-light" type="button" th:if="${currentOperation.opNumber lt job.product.operationList.size()}"
        th:href="@{/member/completeOperation/{jobId}/{opNumber}(jobId=${job.jobId}, opNumber=${currentOperation.opNumber})}">Complete Operation</a>
