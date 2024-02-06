@@ -142,7 +142,7 @@ public class MemberController {
         model.addAttribute("jobs", inProgressJobs);
         model.addAttribute("productName", pName);
 
-        return "/member/search";
+        return "member/search";
     }
 
     // Gets the current operation provided a given job.
