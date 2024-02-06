@@ -27,9 +27,6 @@ public class NCR {
     @JoinColumn(name = "ncr_reviewer_id")
     private User ncrReviewer;
 
-    @Column(name = "ncr_disposition_name")
-    private String dispositionName;
-
     @Column(name = "ncr_disposition_text")
     private String ncrDispositionText;
 
@@ -59,13 +56,6 @@ public class NCR {
         return ncrDescription;
     }
 
-    public String getDispositionName() {
-        return dispositionName;
-    }
-
-    public void setDispositionName(String dispositionName) {
-        this.dispositionName = dispositionName;
-    }
 
     public boolean isDispositioned() {
         return isDispositioned;

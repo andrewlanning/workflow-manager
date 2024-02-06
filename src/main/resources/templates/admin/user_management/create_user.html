@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body class="bg-dark text-white" style="font-family: 'Roboto Mono', monospace;">
-<div th:replace="~{fragments :: page-header}"></div>
 <div class="container-md" id="page">
     <h1>User Creation Portal</h1>
     <form th:action="@{/admin/user_management/create_user}" method="post" th:object="${createUserDTO}" style="margin-top:1rem;">

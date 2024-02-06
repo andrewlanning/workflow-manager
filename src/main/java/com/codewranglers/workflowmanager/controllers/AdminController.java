@@ -270,6 +270,7 @@ public class AdminController {
         return "admin/workflow_management/search";
     }
 
+    // Steps Index page
     @GetMapping("/workflow_management/product/operation/product_id/{productId}")
     public String renderOperationPortal(Model model, @PathVariable int productId) {
         String productName = productRepository.findById(productId).get().getProductName();
@@ -279,6 +280,7 @@ public class AdminController {
         return "operation/admin/index";
     }
 
+    // Add Steps Get Endpoint
     @GetMapping("/workflow_management/product/operation/product_id/{productId}/add")
     public String renderOperationCreationPortal(Model model,  @PathVariable int productId) {
         String productName = productRepository.findById(productId).get().getProductName();
@@ -288,6 +290,7 @@ public class AdminController {
         return "operation/admin/create_operation";
     }
 
+    // Add Steps Post Endpoint
     @PostMapping("/workflow_management/product/operation/product_id/{productId}/add")
     public String processOperationCreation(@ModelAttribute("operations") Operation operation) {
         operation.setOpNumber(createOPNumber(productId));
@@ -296,6 +299,7 @@ public class AdminController {
         return "redirect:/admin/workflow_management/product/operation/product_id/{productId}";
     }
 
+    //Edit Steps Get Endpoint
     @GetMapping("/workflow_management/product/operation/product_id/{productId}/edit/operation_id/{operationId}")
     public String displayEditOperationForm(Model model, @PathVariable int operationId, @PathVariable int productId) {
         Optional<Operation> operationById = operationRepository.findById(operationId);
@@ -313,6 +317,7 @@ public class AdminController {
         }
     }
 
+    //Edit steps Post Endpoint
     @PostMapping("/workflow_management/product/operation/product_id/{productId}/edit/operation_id/{operationId}")
     public String processEditOperationForm(@PathVariable int operationId,
                                            @PathVariable int productId,
@@ -552,7 +557,7 @@ public class AdminController {
         newJob.setLot(lot);
         newJob.setIsCompleted(Boolean.FALSE);
         newJob.setStartDate(LocalDate.now());
-        newJob.setCurrentStep(productOperations.get(0).getOperationId());
+        newJob.setCurrentStep(1);
 
         Job job = jobRepository.save(newJob);
 
@@ -625,19 +630,6 @@ public class AdminController {
             jobRepository.save(job);
         }
         return "redirect:/admin/workflow_management";
-    }
-
-    @GetMapping("/workflow_management/view_parts")
-    private String getAllParts(Model model) {
-        Iterable<Part> all = partRepository.findAll();
-        model.addAttribute("parts", all);
-        return "parts/admin/index";
-    }
-
-    @GetMapping("/workflow_management/view_lots")
-    private String getAllLots(Model model) {
-        model.addAttribute("lots", lotRepository.findAll());
-        return "lots/admin/index";
     }
 
     private String createWONumber() {
